@@ -2,6 +2,7 @@
   <div
     class="flex flex-col items-center space-y-4 p-6 bg-white font-zen rounded-md shadow-md w-full h-screen"
   >
+    <!-- Tailwind Check  -->
     <div class="bg-red-500 text-white p-4">Tailwind CSS is working!</div>
     <h3 class="text-black font-bold">Sign Up</h3>
     <div class="bg-white w-2/5 p-6 rounded-md shadow-md">
