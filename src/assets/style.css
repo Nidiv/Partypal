@@ -1,0 +1,12 @@
+/* src/styles.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+Antique&display=swap");
+/* In your style.css or global file */
+:root {
+  --zen-font: "Zen Kaku Gothic Antique", sans-serif;
+  --primary-color: #6a1b9a;
+  --bg-color: #6a1b9a; /* Custom background color */
+}
