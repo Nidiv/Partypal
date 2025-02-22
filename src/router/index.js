@@ -1,21 +1,21 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Login from "../components/Login.vue";
-import SignUp from "../components/Sign-Up.vue";
+import Auth from "../components/Auth.vue"; // Combined Login & Signup
+import Home from "../components/Home.vue"; // Ensure Home.vue exists
 
 const routes = [
   {
     path: "/",
-    redirect: "/login", // Default route redirects to SignUp
+    redirect: "/auth", // Redirect to Auth.vue
   },
   {
-    path: "/signup",
-    name: "SignUp",
-    component: SignUp,
+    path: "/auth",
+    name: "Auth",
+    component: Auth,
   },
   {
-    path: "/login",
-    name: "Login",
-    component: Login,
+    path: "/home",
+    name: "Home",
+    component: Home,
   },
 ];
 

@@ -8,7 +8,15 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^1.7.9",
+    "bcrypt": "^5.1.1",
     "core-js": "^3.8.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.13.1",
+    "mongoose": "^8.10.1",
     "postcss-cli": "^11.0.0",
     "vue": "^3.2.13",
     "vue-router": "^4.5.0"
@@ -46,5 +54,18 @@
     "last 2 versions",
     "not dead",
     "not ie 11"
-  ]
+  ],
+  "description": "## Project setup ``` npm install ```",
+  "main": "babel.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nidiv/fyp-partypal.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nidiv/fyp-partypal/issues"
+  },
+  "homepage": "https://github.com/Nidiv/fyp-partypal#readme"
 }
