@@ -213,7 +213,16 @@ export default {
 
         console.log(response.data.token);
         localStorage.setItem("authToken", response.data.token);
-        this.$router.push("/home");
+
+        // 🔹 Store user role in localStorage
+        localStorage.setItem("userRole", response.data.user.role);
+
+        // 🔹 Redirect based on role
+        if (response.data.user.role === "vendor") {
+          this.$router.push("/vendorhome"); // Redirect vendors
+        } else {
+          this.$router.push("/home"); // Redirect other users
+        }
       } catch (error) {
         console.error("Login error:", error);
 
@@ -236,24 +245,51 @@ export default {
 
     async signup() {
       try {
+        const formData = new FormData();
+        formData.append("username", this.username);
+        formData.append("email", this.email);
+        formData.append("password", this.password);
+        formData.append("role", this.role);
+
+        // If the user is a vendor, append additional fields
+        if (this.role === "vendor") {
+          formData.append("serviceType", this.serviceType);
+          if (this.documents.length > 0) {
+            this.documents.forEach((file) => {
+              formData.append("documents", file);
+            });
+          }
+        }
+
         const response = await axios.post(
           "http://localhost:8081/api/auth/signup",
+          formData,
           {
-            username: this.username,
-            email: this.email,
-            password: this.password,
-            role: this.role,
+            headers: { "Content-Type": "multipart/form-data" },
           }
         );
 
-        // Log the token received from the backend
-        console.log(response.data.token);
+        console.log(response.data.message); // Debugging success message
 
-        // Store the token in local storage
-        localStorage.setItem("authToken", response.data.token);
+        // 🔹 Automatically log in the user after signup
+        const loginResponse = await axios.post(
+          "http://localhost:8081/api/auth/login",
+          {
+            username: this.username,
+            password: this.password,
+          }
+        );
 
-        // Redirect to login or home page
-        this.$router.push("/home");
+        // Store token & role in localStorage
+        localStorage.setItem("authToken", loginResponse.data.token);
+        localStorage.setItem("userRole", loginResponse.data.user.role);
+
+        // 🔹 Redirect based on role
+        if (loginResponse.data.user.role === "vendor") {
+          this.$router.push("/vendorhome");
+        } else {
+          this.$router.push("/home");
+        }
       } catch (error) {
         if (error.response) {
           this.errorMessage =
@@ -264,6 +300,7 @@ export default {
         this.showErrorPopup = true;
       }
     },
+
     handleFileUpload(event) {
       const files = event.target.files;
 

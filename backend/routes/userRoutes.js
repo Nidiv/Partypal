@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const dotenv = require("dotenv");
+const multer = require("multer");
 dotenv.config();
 
 const router = express.Router();
@@ -12,22 +13,54 @@ if (!process.env.JWT_SECRET) {
   throw new Error("Missing JWT_SECRET in environment variables");
 }
 
-// Signup Route
-router.post("/signup", async (req, res) => {
-  console.log("Signup route hit", req.body);
-  try {
-    const { username, email, password, role } = req.body;
+// 🟢 Configure Multer Storage
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/"); // Ensure the "uploads" folder exists
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
 
-    // Check if user already exists
+const upload = multer({ storage: storage });
+
+// 🟢 Signup Route with File Uploads
+router.post("/signup", upload.array("documents", 2), async (req, res) => {
+  console.log("Signup route hit", req.body);
+  console.log("Uploaded Files:", req.files); // Debugging file uploads
+
+  try {
+    const { username, email, password, role, serviceType } = req.body;
+
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    if (role === "vendor" && !serviceType) {
+      return res
+        .status(400)
+        .json({ message: "Vendors must provide a serviceType" });
+    }
+
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ message: "User already exists" });
 
-    // Create new user
-    user = new User({ username, email, password, role });
-    await user.save();
+    user = new User({
+      username,
+      email,
+      password,
+      role,
+      serviceType,
+      documents: req.files ? req.files.map((file) => file.path) : [], // ✅ Fix applied
+    });
 
+    console.log("Before Saving User:", user);
+
+    await user.save();
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
+    console.error("Signup error:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });

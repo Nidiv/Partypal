@@ -36,15 +36,21 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ["catering", "sound", "venue"],
     required: function () {
+      console.log(
+        "Checking serviceType requirement:",
+        this.role,
+        this.serviceType
+      );
       return this.role === "vendor";
     },
+    default: undefined, // Prevents empty field for users
   },
   documents: {
     type: [String],
     default: undefined, // ✅ Prevents empty array in MongoDB
     validate: {
       validator: function (v) {
-        return this.role !== "vendor" || (v && v.length <= 2);
+        return this.role !== "vendor" || (v && v.length > 0 && v.length <= 2);
       },
       message: "Vendors can upload maximum 2 documents",
     },
