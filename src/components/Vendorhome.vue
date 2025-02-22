@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1>Welcome to USER Home Page</h1>
-    <button @click="logout" class="bg-red-500 text-white px-4 py-2 rounded-md">
+    <h1>Welcome to VENDOR HOME Page</h1>
+    <button @click="logout" class="bg-blue-500 text-white px-4 py-2 rounded-md">
       Logout
     </button>
   </div>

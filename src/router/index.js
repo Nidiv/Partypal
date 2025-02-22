@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Auth from "../components/Auth.vue"; // Combined Login & Signup
 import Home from "../components/Home.vue"; // Ensure Home.vue exists
+import Vendorhome from "../components/Vendorhome.vue"; // Ensure Vendorhome.vue exists
 
 const routes = [
   {
@@ -16,6 +17,11 @@ const routes = [
     path: "/home",
     name: "Home",
     component: Home,
+  },
+  {
+    path: "/vendorhome",
+    name: "Vendorhome",
+    component: Vendorhome,
   },
 ];
 
