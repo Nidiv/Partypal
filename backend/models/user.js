@@ -29,18 +29,13 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["user", "vendor"],
+    enum: ["user", "vendor", "admin"],
     default: "user",
   },
   serviceType: {
     type: String,
     enum: ["catering", "sound", "venue"],
     required: function () {
-      console.log(
-        "Checking serviceType requirement:",
-        this.role,
-        this.serviceType
-      );
       return this.role === "vendor";
     },
     default: undefined, // Prevents empty field for users
@@ -54,6 +49,10 @@ const userSchema = new mongoose.Schema({
       },
       message: "Vendors can upload maximum 2 documents",
     },
+  },
+  isApproved: {
+    type: Boolean,
+    default: false, // 🔹 Vendors require admin approval before login
   },
   createdAt: {
     type: Date,
