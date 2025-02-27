@@ -214,28 +214,31 @@ export default {
         console.log(response.data.token);
         localStorage.setItem("authToken", response.data.token);
 
-        // 🔹 Store user role in localStorage
-        localStorage.setItem("userRole", response.data.user.role);
+        // 🔹 Ensure user data exists before accessing role
+        const userRole = response.data.user?.role || "user";
+        localStorage.setItem("userRole", userRole);
 
         // 🔹 Redirect based on role
-        if (response.data.user.role === "vendor") {
-          this.$router.push("/vendorhome"); // Redirect vendors
-        } else {
-          this.$router.push("/home"); // Redirect other users
-        }
+        this.$router.push(userRole === "vendor" ? "/vendorhome" : "/home");
       } catch (error) {
-        console.error("Login error:", error);
+        // console.error("Login error:", error);
 
-        // Handle different error types
+        // 🔹 Handle specific error cases
         if (error.response) {
-          // The request was made, and the server responded with a status code outside the 2xx range
-          this.errorMessage =
-            error.response.data?.message || `Error: ${error.response.status}`;
+          const { status, data } = error.response;
+
+          if (status === 403) {
+            this.errorMessage = "Your account is pending admin approval.";
+          } else if (status === 404) {
+            this.errorMessage = "User not found. Please check your username.";
+          } else if (status === 400) {
+            this.errorMessage = "Invalid password. Please try again.";
+          } else {
+            this.errorMessage = data?.message || `Error: ${status}`;
+          }
         } else if (error.request) {
-          // The request was made but no response was received
           this.errorMessage = "No response from server. Check your network.";
         } else {
-          // Something else happened
           this.errorMessage = "An unexpected error occurred.";
         }
 
@@ -271,25 +274,37 @@ export default {
 
         console.log(response.data.message); // Debugging success message
 
-        // 🔹 Automatically log in the user after signup
-        const loginResponse = await axios.post(
-          "http://localhost:8081/api/auth/login",
-          {
-            username: this.username,
-            password: this.password,
-          }
-        );
-
-        // Store token & role in localStorage
-        localStorage.setItem("authToken", loginResponse.data.token);
-        localStorage.setItem("userRole", loginResponse.data.user.role);
-
-        // 🔹 Redirect based on role
-        if (loginResponse.data.user.role === "vendor") {
-          this.$router.push("/vendorhome");
+        // Show success message based on role
+        if (this.role === "vendor") {
+          this.successMessage =
+            "Signup successful! Your account is pending admin approval.";
         } else {
+          this.successMessage = "Signup successful! You can now log in.";
+
+          // Auto-login for regular users
+          const loginResponse = await axios.post(
+            "http://localhost:8081/api/auth/login",
+            {
+              username: this.username,
+              password: this.password,
+            }
+          );
+
+          // Store token & role in localStorage
+          localStorage.setItem("authToken", loginResponse.data.token);
+          localStorage.setItem("userRole", loginResponse.data.user.role);
+
+          // Redirect based on role
           this.$router.push("/home");
         }
+
+        // Clear form fields after successful signup
+        this.username = "";
+        this.email = "";
+        this.password = "";
+        this.role = "user";
+        this.serviceType = "";
+        this.documents = [];
       } catch (error) {
         if (error.response) {
           this.errorMessage =
