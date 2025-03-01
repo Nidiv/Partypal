@@ -1,46 +1,21 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Auth from "../components/Auth.vue"; // Combined Login & Signup
-import Home from "../components/Home.vue"; // Ensure Home.vue exists
-import Vendorhome from "../components/Vendorhome.vue"; // Ensure Vendorhome.vue exists
-import AboutUs from "../components/AboutUs.vue"; // Import the new About Us page
-import ServicePage from "../components/Services.vue"; // Import the new Service page
-import ContactUsPage from "../components/ContactUs.vue"; // Import the new Service page
+import Auth from "../components/Auth.vue"; // Login & Signup Page
+import Home from "../components/Home.vue"; // Home Page
+import Vendorhome from "../components/Vendorhome.vue"; // Vendor Dashboard
+import AboutUs from "../components/AboutUs.vue"; // About Us Page
+import ServicePage from "../components/Services.vue"; // Services Page
+import ContactUsPage from "../components/ContactUs.vue"; // Contact Us Page
+import NotFound from "../components/NotFound.vue"; // 404 Page (Not Found)
 
 const routes = [
-  {
-    path: "/",
-    redirect: "/auth", // Redirect to Auth.vue
-  },
-  {
-    path: "/auth",
-    name: "Auth",
-    component: Auth,
-  },
-  {
-    path: "/home",
-    name: "Home",
-    component: Home,
-  },
-  {
-    path: "/vendorhome",
-    name: "Vendorhome",
-    component: Vendorhome,
-  },
-  {
-    path: "/aboutus", // ✅ Add the About Us route
-    name: "AboutUs",
-    component: AboutUs,
-  },
-  {
-    path: "/services", // ✅ Add the About Us route
-    name: "Services",
-    component: ServicePage,
-  },
-  {
-    path: "/contactus", // ✅ Add the About Us route
-    name: "ContactUs",
-    component: ContactUsPage,
-  },
+  { path: "/", redirect: "/auth" }, // Redirect to Auth page
+  { path: "/auth", name: "Auth", component: Auth },
+  { path: "/home", name: "Home", component: Home },
+  { path: "/vendorhome", name: "Vendorhome", component: Vendorhome },
+  { path: "/aboutus", name: "AboutUs", component: AboutUs },
+  { path: "/services", name: "Services", component: ServicePage },
+  { path: "/contactus", name: "ContactUs", component: ContactUsPage },
+  { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound }, // ✅ Catch-all route for invalid URLs
 ];
 
 const router = createRouter({

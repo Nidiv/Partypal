@@ -13,7 +13,7 @@
       <div class="grid md:grid-cols-3 gap-6 text-gray-700">
         <!-- Office -->
         <div class="flex items-start space-x-4">
-          <img src="/location-icon.svg" alt="Office" class="w-6 h-6 mt-1" />
+          <i class="bx bx-map text-blue-500 text-2xl mt-1"></i>
           <div>
             <h3 class="text-lg font-semibold text-blue-500">Office</h3>
             <p>PartyPal Pvt. Ltd</p>
@@ -23,7 +23,7 @@
 
         <!-- Phone -->
         <div class="flex items-start space-x-4">
-          <img src="/phone-icon.svg" alt="Phone" class="w-6 h-6 mt-1" />
+          <i class="bx bx-phone text-blue-500 text-2xl mt-1"></i>
           <div>
             <h3 class="text-lg font-semibold text-blue-500">Phone</h3>
             <p>Telephone: 01-4494842</p>
@@ -33,7 +33,7 @@
 
         <!-- Email -->
         <div class="flex items-start space-x-4">
-          <img src="/email-icon.svg" alt="Email" class="w-6 h-6 mt-1" />
+          <i class="bx bx-envelope text-blue-500 text-2xl mt-1"></i>
           <div>
             <h3 class="text-lg font-semibold text-blue-500">Email</h3>
             <p class="text-black">partypal@gmail.com</p>
@@ -85,6 +85,7 @@
 </template>
 
 <script>
+import "boxicons/css/boxicons.min.css";
 export default {
   data() {
     return {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- Show Navbar and Footer only if the current route is NOT login/signup -->
+    <!-- Show Navbar and Footer only if the current route is NOT in the hidden list -->
     <Navbar v-if="!hideNavAndFooter" />
     <router-view />
     <Footer v-if="!hideNavAndFooter" />
@@ -18,8 +18,8 @@ export default {
   },
   computed: {
     hideNavAndFooter() {
-      const hiddenRoutes = ["/auth"];
-      return hiddenRoutes.includes(this.$route.path);
+      const hiddenRoutes = ["Auth", "Vendorhome", "NotFound"];
+      return hiddenRoutes.includes(this.$route.name); // ✅ Use `this.$route.name`
     },
   },
 };
