@@ -162,18 +162,11 @@
       </button>
     </section>
   </div>
+  <!-- <button @click="logout" class="bg-red-500 text-white px-4 py-2 rounded-md">
+      Logout
+    </button> -->
 </template>
-<!-- <button @click="logout" class="bg-red-500 text-white px-4 py-2 rounded-md">
-  Logout
-</button> -->
 
 <script>
-export default {
-  methods: {
-    logout() {
-      localStorage.removeItem("authToken"); // Remove auth token
-      this.$router.push("/auth"); // Redirect to Auth page
-    },
-  },
-};
+export default {};
 </script>

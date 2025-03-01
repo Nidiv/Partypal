@@ -16,7 +16,6 @@
             >About Us</router-link
           >
         </li>
-        <!-- ✅ Updated -->
         <li>
           <router-link to="/services" class="hover:underline"
             >Services</router-link
@@ -28,6 +27,24 @@
           >
         </li>
       </ul>
+      <!-- Logout Button -->
+      <button
+        @click="logout"
+        class="bg-red-500 text-white px-4 py-2 rounded-md"
+      >
+        Logout
+      </button>
     </nav>
   </div>
 </template>
+
+<script>
+export default {
+  methods: {
+    logout() {
+      localStorage.removeItem("authToken"); // Remove auth token
+      this.$router.push("/auth"); // Redirect to Auth page
+    },
+  },
+};
+</script>
