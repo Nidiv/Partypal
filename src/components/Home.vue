@@ -22,6 +22,14 @@
         PartyPal is your trusted event management platform that ensures seamless
         planning, vendor coordination, and execution of all types of events.
       </p>
+
+      <!-- Read More Button -->
+      <router-link
+        to="/aboutus"
+        class="mt-6 inline-block bg-primary text-white px-6 py-2 rounded-md hover:bg-primaryDark transition"
+      >
+        Read More
+      </router-link>
     </section>
 
     <!-- Our Services Section -->
