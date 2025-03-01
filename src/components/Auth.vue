@@ -40,6 +40,7 @@
             :type="showPassword ? 'text' : 'password'"
             placeholder="Enter your password"
             class="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            @keyup.enter="handleAuth"
           />
           <button
             type="button"
