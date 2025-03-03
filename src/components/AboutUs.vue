@@ -34,7 +34,7 @@
         </p>
       </div>
       <img
-        src="/img/what-we-do.jpg"
+        src="../assets/img/corporate-2.jpg"
         alt="What We Do"
         class="md:w-1/2 rounded-lg shadow-lg mt-6 md:mt-0"
       />
@@ -49,19 +49,22 @@
       </p>
       <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         <img
-          src="/img/event1.jpg"
-          alt="Event Planning"
-          class="w-full rounded-lg shadow"
+          src="../assets/img/venue.jpg"
+          alt="Elegant event venue with stage and seating arrangement"
+          class="w-full aspect-video object-cover rounded-lg shadow"
+          loading="lazy"
         />
         <img
-          src="/img/event2.jpg"
-          alt="Event Planning"
-          class="w-full rounded-lg shadow"
+          src="../assets/img/sound.jpg"
+          alt="Professional sound system setup for an event"
+          class="w-full aspect-video object-cover rounded-lg shadow"
+          loading="lazy"
         />
         <img
-          src="/img/event3.jpg"
-          alt="Event Planning"
-          class="w-full rounded-lg shadow"
+          src="../assets/img/catering.jpg"
+          alt="Delicious catering spread with gourmet food"
+          class="w-full aspect-video object-cover rounded-lg shadow"
+          loading="lazy"
         />
       </div>
     </section>
@@ -72,20 +75,20 @@
       <div class="mt-6 flex flex-col md:flex-row justify-center space-x-6">
         <div class="text-center">
           <img
-            src="/img/user1.jpg"
-            alt="Customer"
+            src="https://robohash.org/JohnD?size=100x100"
+            alt="John D."
             class="w-16 h-16 rounded-full mx-auto"
           />
-          <p class="mt-2 font-semibold">John D.</p>
+          <p class="mt-2 font-semibold">Ishana Shrestha</p>
           <p class="italic">“PartyPal made my wedding planning effortless!”</p>
         </div>
         <div class="text-center">
           <img
-            src="/img/user2.jpg"
-            alt="Customer"
+            src="https://robohash.org/EmilyR?size=100x100"
+            alt="Emily R."
             class="w-16 h-16 rounded-full mx-auto"
           />
-          <p class="mt-2 font-semibold">Emily R.</p>
+          <p class="mt-2 font-semibold">Emily Rai.</p>
           <p class="italic">“Highly recommend PartyPal for all events.”</p>
         </div>
       </div>

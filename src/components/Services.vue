@@ -44,7 +44,7 @@
         <!-- Photo 1 -->
         <div class="bg-gray-100 p-4 rounded shadow-md">
           <img
-            src="photo1.jpg"
+            src="../assets/img/corporate-1.jpg"
             alt="Corporate Event"
             class="w-full h-64 object-cover rounded-md"
           />
@@ -52,7 +52,7 @@
         <!-- Photo 2 -->
         <div class="bg-gray-100 p-4 rounded shadow-md">
           <img
-            src="photo2.jpg"
+            src="../assets/img/corporate-2.jpg"
             alt="Corporate Event"
             class="w-full h-64 object-cover rounded-md"
           />
@@ -60,7 +60,7 @@
         <!-- Photo 3 -->
         <div class="bg-gray-100 p-4 rounded shadow-md">
           <img
-            src="photo3.jpg"
+            src="../assets/img/corporate-3.jpg"
             alt="Corporate Event"
             class="w-full h-64 object-cover rounded-md"
           />
@@ -68,7 +68,7 @@
         <!-- Photo 4 -->
         <div class="bg-gray-100 p-4 rounded shadow-md">
           <img
-            src="photo4.jpg"
+            src="../assets/img/corporate-4.jpg"
             alt="Corporate Event"
             class="w-full h-64 object-cover rounded-md"
           />
