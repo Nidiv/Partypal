@@ -11,15 +11,15 @@ function initiate(req, res) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      return_url: "http://example.com/",
+      return_url: "http://localhost:3000/home",
       website_url: "https://example.com/",
       amount: "100000",
       purchase_order_id: "Order01",
       purchase_order_name: "test",
       customer_info: {
-        name: "Ram Bahadur",
-        email: "test@khalti.com",
-        phone: "9800000001",
+        name: "Nidiv Kayastha",
+        email: "nidiv@khalti.com",
+        phone: "9861616161",
       },
     }),
   };
