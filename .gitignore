@@ -12,7 +12,7 @@ node_modules
 backend/uploads/
 
 #ignore assests images
-assests/img/
+src/assets/img/
 
 # Log files
 npm-debug.log*

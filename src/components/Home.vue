@@ -109,6 +109,12 @@
           loading="lazy"
         />
       </div>
+      <button
+        @click="initiatePayment"
+        class="mt-6 bg-primary text-white px-6 py-2 rounded-full font-semibold hover:bg-purple-800 transition"
+      >
+        Pay Now
+      </button>
     </section>
 
     <!-- Ready-Made Packages -->
@@ -317,6 +323,9 @@ export default {
     this.stopAutoplay();
   },
   methods: {
+    initiatePayment() {
+      window.location.href = "http://localhost:8081/payment"; // Redirects to backend
+    },
     startAutoplay() {
       this.autoplayInterval = setInterval(() => {
         this.nextSlide();
