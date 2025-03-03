@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Auth from "../components/Auth.vue"; // Login & Signup Page
 import Home from "../components/Home.vue"; // Home Page
-import Vendorhome from "../components/Vendorhome.vue"; // Vendor Dashboard
+import Vendorhome from "../components/vendor/Vendorhome.vue"; // Vendor Dashboard
 import AboutUs from "../components/AboutUs.vue"; // About Us Page
 import ServicePage from "../components/Services.vue"; // Services Page
 import ContactUsPage from "../components/ContactUs.vue"; // Contact Us Page

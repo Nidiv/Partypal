@@ -5,10 +5,10 @@
       The page you are looking for does not exist.
     </p>
     <router-link
-      to="/home"
+      to="/auth"
       class="mt-6 bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600"
     >
-      Go to Home
+      Go Back
     </router-link>
   </div>
 </template>
