@@ -10,7 +10,7 @@
       >
       <a href="#" class="text-white hover:text-[#9c4f96] transition block"
         >Messages</a
-      >
+      > 
       <a href="#" class="text-white hover:text-[#9c4f96] transition block"
         >Profile</a
       >
