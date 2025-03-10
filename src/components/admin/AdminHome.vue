@@ -61,27 +61,24 @@ export default {
     await this.fetchPendingVendors();
   },
   methods: {
-    async approveVendor(vendorId) {
+    async fetchPendingVendors() {
       try {
-        const token = localStorage.getItem("authToken"); // Retrieve stored token
-        if (!token) {
-          console.error("No authentication token found");
-          return;
-        }
-
-        const response = await axios.put(
-          `http://localhost:8081/api/auth/admin/approve-vendor/${vendorId}`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Attach token to request
-            },
-          }
+        const response = await axios.get(
+          "http://localhost:8081/api/auth/admin/pending-vendors"
         );
-
-        console.log(response.data.message);
-        // Optionally update UI or refresh vendor list
-        this.fetchPendingVendors(); // Refresh vendor list after approval
+        this.vendors = response.data;
+      } catch (error) {
+        console.error("Error fetching vendors:", error);
+      } finally {
+        this.loading = false;
+      }
+    },
+    async approveVendor(id) {
+      try {
+        await axios.put(
+          `http://localhost:8081/api/auth/admin/approve-vendor/${id}`
+        );
+        this.vendors = this.vendors.filter((vendor) => vendor._id !== id); // Remove from list after approval
       } catch (error) {
         console.error("Error approving vendor:", error);
       }

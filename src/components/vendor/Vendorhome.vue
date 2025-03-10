@@ -7,6 +7,17 @@
       <div class="bg-[#34495e] rounded-lg shadow-xl p-6 max-w-4xl mx-auto">
         <h2 class="text-2xl font-bold mb-6 text-[#9c4f96]">Add New Service</h2>
 
+        <!-- Success/Error Message -->
+        <div
+          v-if="message"
+          :class="[
+            'mb-6 p-4 rounded-md',
+            message.type === 'success' ? 'bg-green-500' : 'bg-red-500',
+          ]"
+        >
+          {{ message.text }}
+        </div>
+
         <!-- Form Tabs -->
         <div class="mb-8">
           <div class="flex border-b border-[#bdc3c7]">
@@ -665,12 +676,10 @@
   </div>
 </template>
 
-<!-- <button @click="logout" class="bg-blue-500 text-white px-4 py-2 rounded-md">
-      Logout
-    </button> -->
-
 <script>
 import NavVendor from "@/components/vendor/Nav-Vendor.vue"; // Adjust the path if necessary
+import axios from "axios"; // Import Axios for API requests
+
 export default {
   components: {
     NavVendor,
@@ -703,11 +712,7 @@ export default {
             features: [""],
           },
         ],
-        photos: [
-          // Sample photos for demonstration
-          { url: "/api/placeholder/400/300", name: "sample1.jpg" },
-          { url: "/api/placeholder/400/300", name: "sample2.jpg" },
-        ],
+        photos: [],
         videoLink: "",
         menuPdf: null,
       },
@@ -731,6 +736,7 @@ export default {
         { value: "halal", label: "Halal" },
         { value: "kosher", label: "Kosher" },
       ],
+      message: null, // For success/error messages
     };
   },
   methods: {
@@ -813,7 +819,10 @@ export default {
       const file = event.target.files[0];
       if (!file) return;
 
-      this.service.menuPdf = file;
+      this.service.menuPdf = {
+        name: file.name,
+        url: URL.createObjectURL(file),
+      };
     },
     saveAsDraft() {
       // Implementation for saving as draft
@@ -823,46 +832,111 @@ export default {
       // Simulate successful save
       alert("Service saved as draft successfully!");
     },
-    publishService() {
-      // Validate service before publishing
+    async publishService() {
       if (!this.validateService()) {
         return;
       }
 
-      // Implementation for publishing service
-      console.log("Publishing service:", this.service);
-      this.$emit("publish-service", this.service);
+      try {
+        const authToken = localStorage.getItem("authToken"); // Get token if required
 
-      // Simulate successful publish
-      alert("Service published successfully!");
+        const response = await axios.post(
+          "http://localhost:8081/api/services",
+          this.service,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: authToken ? `Bearer ${authToken}` : "", // Include token if required
+            },
+          }
+        );
+
+        console.log(response);
+        this.message = {
+          type: "success",
+          text: "Service published successfully!",
+        };
+
+        this.resetForm();
+      } catch (error) {
+        console.error("Error:", error.response?.data || error);
+        this.message = {
+          type: "error",
+          text: error.response?.data?.message || "Failed to publish service.",
+        };
+      }
     },
     validateService() {
       // Basic validation
       if (!this.service.title) {
-        alert("Please provide a service title");
+        this.message = {
+          type: "error",
+          text: "Please provide a service title",
+        };
         this.activeTab = "basic";
         return false;
       }
 
       if (!this.service.type) {
-        alert("Please select a service type");
+        this.message = {
+          type: "error",
+          text: "Please select a service type",
+        };
         this.activeTab = "basic";
         return false;
       }
 
       if (!this.service.shortDescription) {
-        alert("Please provide a short description");
+        this.message = {
+          type: "error",
+          text: "Please provide a short description",
+        };
         this.activeTab = "basic";
         return false;
       }
 
       if (this.service.photos.length === 0) {
-        alert("Please upload at least one photo");
+        this.message = {
+          type: "error",
+          text: "Please upload at least one photo",
+        };
         this.activeTab = "photos";
         return false;
       }
 
       return true;
+    },
+    resetForm() {
+      // Reset the form to its initial state
+      this.service = {
+        title: "",
+        type: "",
+        shortDescription: "",
+        location: "",
+        detailedDescription: "",
+        basePrice: "",
+        priceUnit: "per_person",
+        advancePayment: 50,
+        cancelationPolicy: "moderate",
+        customCancelationPolicy: "",
+        cuisines: [],
+        dietaryOptions: [],
+        minGuests: 20,
+        maxGuests: 200,
+        additionalServices: [""],
+        packages: [
+          {
+            name: "Basic Package",
+            price: "",
+            description: "",
+            features: [""],
+          },
+        ],
+        photos: [],
+        videoLink: "",
+        menuPdf: null,
+      };
+      this.activeTab = "basic";
     },
   },
 };

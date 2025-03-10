@@ -161,6 +161,30 @@ router.put("/admin/approve-vendor/:id", verifyAdmin, async (req, res) => {
   }
 });
 
+// 🔹 🆕 Admin Route: Approve All Pending Vendors at Once
+router.put("/admin/approve-all-vendors", verifyAdmin, async (req, res) => {
+  try {
+    const result = await User.updateMany(
+      { role: "vendor", isApproved: false }, // Find unapproved vendors
+      { isApproved: true } // Approve them
+    );
+
+    if (result.modifiedCount === 0) {
+      return res
+        .status(404)
+        .json({ message: "No pending vendors found to approve" });
+    }
+
+    res
+      .status(200)
+      .json({
+        message: `${result.modifiedCount} vendors approved successfully`,
+      });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 // Protected Route: Get User Info
 router.get("/me", async (req, res) => {
   try {

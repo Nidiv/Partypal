@@ -519,7 +519,13 @@ export default {
         localStorage.setItem("userRole", userRole);
 
         // 🔹 Redirect based on role
-        this.$router.push(userRole === "vendor" ? "/vendorhome" : "/home");
+        this.$router.push(
+          userRole === "admin"
+            ? "/adminhome"
+            : userRole === "vendor"
+            ? "/vendorhome"
+            : "/home"
+        );
       } catch (error) {
         // console.error("Login error:", error);
 

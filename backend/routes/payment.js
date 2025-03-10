@@ -12,7 +12,7 @@ function initiate(req, res) {
     },
     body: JSON.stringify({
       return_url: "http://localhost:3000/home",
-      website_url: "https://example.com/",
+      website_url: "http://localhost:3000/home",
       amount: "100000",
       purchase_order_id: "Order01",
       purchase_order_name: "test",

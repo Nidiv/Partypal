@@ -6,6 +6,7 @@ import AboutUs from "../components/AboutUs.vue"; // About Us Page
 import ServicePage from "../components/Services.vue"; // Services Page
 import ContactUsPage from "../components/ContactUs.vue"; // Contact Us Page
 import NotFound from "../components/NotFound.vue"; // 404 Page (Not Found)
+import AdminHome from "../components/admin/AdminHome.vue";
 
 const routes = [
   { path: "/", redirect: "/auth" }, // Redirect to Auth page
@@ -16,6 +17,11 @@ const routes = [
   { path: "/services", name: "Services", component: ServicePage },
   { path: "/contactus", name: "ContactUs", component: ContactUsPage },
   { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound }, // ✅ Catch-all route for invalid URLs
+  {
+    path: "/adminhome",
+    name: "AdminHome",
+    component: AdminHome,
+  },
 ];
 
 const router = createRouter({
