@@ -9,69 +9,111 @@
     </section>
 
     <!-- Our Services Section -->
-    <section id="services" class="py-16 px-6 text-center">
-      <h2 class="text-2xl font-bold text-primary">Our Services</h2>
-      <div class="mt-6 flex justify-center space-x-4">
+    <section id="services" class="py-16 px-6">
+      <h2 class="text-2xl font-bold text-primary text-center">Our Services</h2>
+
+      <!-- Category Filters (Top) -->
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
         <button
           class="bg-primary text-white px-4 py-2 rounded hover:bg-purple-800"
+          :class="{ 'bg-purple-800': activeCategory === 'all' }"
+          @click="filterServices('all')"
         >
           All
         </button>
         <button
+          v-for="category in categories"
+          :key="category.value"
           class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+          :class="{
+            'bg-purple-800 text-white': activeCategory === category.value,
+          }"
+          @click="filterServices(category.value)"
         >
-          Corporate Events
-        </button>
-        <button
-          class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
-        >
-          Social Events
-        </button>
-        <button
-          class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
-        >
-          Wedding
+          {{ category.label }}
         </button>
       </div>
-    </section>
 
-    <!-- Corporate Events Section -->
-    <section class="py-16 px-6">
-      <h3 class="text-xl font-semibold text-center text-primary">
-        Corporate Events
-      </h3>
-      <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Photo 1 -->
-        <div class="bg-gray-100 p-4 rounded shadow-md">
+      <!-- Search & Price Filters (Below Categories) -->
+      <div class="mt-6 flex flex-wrap justify-center gap-4">
+        <!-- 🔍 Search Bar -->
+        <input
+          type="text"
+          v-model="searchQuery"
+          placeholder="Search services..."
+          class="w-full sm:w-1/3 bg-gray-100 border border-gray-400 rounded-md py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+
+        <!-- Price Range Filters -->
+        <input
+          type="number"
+          v-model.number="minPrice"
+          placeholder="Min Price"
+          class="w-1/5 bg-gray-100 border border-gray-400 rounded-md py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        <input
+          type="number"
+          v-model.number="maxPrice"
+          placeholder="Max Price"
+          class="w-1/5 bg-gray-100 border border-gray-400 rounded-md py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+      </div>
+
+      <!-- Loading State -->
+      <div v-if="loading" class="text-lg text-center mt-6">
+        Loading services...
+      </div>
+
+      <!-- Error Message -->
+      <div v-if="error" class="text-red-500 text-lg text-center mt-6">
+        {{ error }}
+      </div>
+
+      <!-- No Services Message -->
+      <div
+        v-if="!loading && filteredServices.length === 0"
+        class="text-lg text-center mt-6 text-gray-500"
+      >
+        No services found matching "{{ searchQuery }}" in "{{ activeCategory }}"
+        within price range {{ minPrice }} - {{ maxPrice }}.
+      </div>
+
+      <!-- Service Cards -->
+      <div
+        v-if="filteredServices.length"
+        class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+      >
+        <div
+          v-for="service in filteredServices"
+          :key="service._id"
+          class="bg-gray-100 p-4 rounded shadow-md"
+        >
+          <!-- Service Image -->
           <img
-            src="../assets/img/corporate-1.jpg"
-            alt="Corporate Event"
+            :src="
+              service.photos.length ? service.photos[0].url : '/placeholder.jpg'
+            "
+            alt="Service Image"
             class="w-full h-64 object-cover rounded-md"
           />
-        </div>
-        <!-- Photo 2 -->
-        <div class="bg-gray-100 p-4 rounded shadow-md">
-          <img
-            src="../assets/img/corporate-2.jpg"
-            alt="Corporate Event"
-            class="w-full h-64 object-cover rounded-md"
-          />
-        </div>
-        <!-- Photo 3 -->
-        <div class="bg-gray-100 p-4 rounded shadow-md">
-          <img
-            src="../assets/img/corporate-3.jpg"
-            alt="Corporate Event"
-            class="w-full h-64 object-cover rounded-md"
-          />
-        </div>
-        <!-- Photo 4 -->
-        <div class="bg-gray-100 p-4 rounded shadow-md">
-          <img
-            src="../assets/img/corporate-4.jpg"
-            alt="Corporate Event"
-            class="w-full h-64 object-cover rounded-md"
-          />
+
+          <!-- Service Info -->
+          <h3 class="text-lg font-semibold text-gray-800 mt-4">
+            {{ service.title }}
+          </h3>
+          <p class="text-gray-600 mt-2">{{ service.shortDescription }}</p>
+          <p class="text-gray-900 font-semibold mt-2">
+            Rs. {{ service.basePrice }} /
+            {{ service.priceUnit.replace("_", " ") }}
+          </p>
+
+          <!-- View Details Button -->
+          <router-link
+            :to="'/viewdetails/' + service._id"
+            class="mt-4 inline-block px-4 py-2 bg-primary text-white rounded hover:bg-purple-800 transition"
+          >
+            View Details
+          </router-link>
         </div>
       </div>
     </section>
@@ -91,3 +133,69 @@
     </section>
   </div>
 </template>
+
+<script>
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      services: [],
+      searchQuery: "",
+      activeCategory: "all",
+      minPrice: null,
+      maxPrice: null,
+      loading: true,
+      error: null,
+      categories: [
+        { value: "catering", label: "Catering" },
+        { value: "decoration", label: "Decoration" },
+        { value: "venue", label: "Venue" },
+        { value: "photography", label: "Photography" },
+        { value: "entertainment", label: "Entertainment" },
+      ],
+    };
+  },
+  computed: {
+    filteredServices() {
+      return this.services.filter((service) => {
+        // Match search query (title or type)
+        const matchesSearch =
+          service.title
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase()) ||
+          service.type.toLowerCase().includes(this.searchQuery.toLowerCase());
+
+        // Match category
+        const matchesCategory =
+          this.activeCategory === "all" || service.type === this.activeCategory;
+
+        // Match price range
+        const matchesPrice =
+          (!this.minPrice || service.basePrice >= this.minPrice) &&
+          (!this.maxPrice || service.basePrice <= this.maxPrice);
+
+        return matchesSearch && matchesCategory && matchesPrice;
+      });
+    },
+  },
+  methods: {
+    async fetchServices() {
+      try {
+        const response = await axios.get("http://localhost:8081/api/services");
+        this.services = response.data;
+      } catch (error) {
+        this.error = "Error fetching services. Please try again.";
+      } finally {
+        this.loading = false;
+      }
+    },
+    filterServices(category) {
+      this.activeCategory = category;
+    },
+  },
+  mounted() {
+    this.fetchServices();
+  },
+};
+</script>
