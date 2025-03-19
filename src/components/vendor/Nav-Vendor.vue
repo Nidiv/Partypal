@@ -1,19 +1,38 @@
 <template>
   <aside class="w-64 min-h-screen bg-[#4e0072] p-6 shadow-md">
-    <h1 class="text-2xl font-bold text-white mb-6">PartyPal</h1>
+    <!-- PartyPal Logo (Clickable) -->
+    <router-link
+      to="/vendorhome"
+      class="text-2xl font-bold text-white mb-6 block hover:text-[#9c4f96] transition"
+    >
+      PartyPal
+    </router-link>
+
     <nav class="flex flex-col space-y-4">
-      <a href="#" class="text-white hover:text-[#9c4f96] transition block"
-        >Dashboard</a
+      <router-link
+        to="/dashboard"
+        class="text-white hover:text-[#9c4f96] transition block"
       >
-      <a href="#" class="text-white hover:text-[#9c4f96] transition block"
-        >My Services</a
+        Dashboard
+      </router-link>
+      <router-link
+        to="/vendorservices"
+        class="text-white hover:text-[#9c4f96] transition block"
       >
-      <a href="#" class="text-white hover:text-[#9c4f96] transition block"
-        >Messages</a
-      > 
-      <a href="#" class="text-white hover:text-[#9c4f96] transition block"
-        >Profile</a
+        My Services
+      </router-link>
+      <router-link
+        to="/messages"
+        class="text-white hover:text-[#9c4f96] transition block"
       >
+        Messages
+      </router-link>
+      <router-link
+        to="/profile"
+        class="text-white hover:text-[#9c4f96] transition block"
+      >
+        Profile
+      </router-link>
       <button
         @click="logout"
         class="text-white hover:text-[#9c4f96] transition block text-left w-full"

@@ -18,7 +18,14 @@ export default {
   },
   computed: {
     hideNavAndFooter() {
-      const hiddenRoutes = ["Auth", "Vendorhome", "NotFound", "AdminHome"];
+      const hiddenRoutes = [
+        "Auth",
+        "Vendorhome",
+        "NotFound",
+        "AdminHome",
+        "VendorServices",
+        "ViewDetails",
+      ];
       return hiddenRoutes.includes(this.$route.name); // ✅ Use `this.$route.name`
     },
   },

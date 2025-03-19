@@ -7,12 +7,20 @@ import ServicePage from "../components/Services.vue"; // Services Page
 import ContactUsPage from "../components/ContactUs.vue"; // Contact Us Page
 import NotFound from "../components/NotFound.vue"; // 404 Page (Not Found)
 import AdminHome from "../components/admin/AdminHome.vue";
+import VendorServices from "../components/vendor/VendorServices.vue"; // Vendor Services
+import ViewDetails from "../components/vendor/ViewDetails.vue"; // Vendor Services
 
 const routes = [
   { path: "/", redirect: "/auth" }, // Redirect to Auth page
   { path: "/auth", name: "Auth", component: Auth },
   { path: "/home", name: "Home", component: Home },
   { path: "/vendorhome", name: "Vendorhome", component: Vendorhome },
+  { path: "/viewdetails", name: "ViewDetails", component: ViewDetails },
+  {
+    path: "/vendorservices",
+    name: "VendorServices",
+    component: VendorServices,
+  },
   { path: "/aboutus", name: "AboutUs", component: AboutUs },
   { path: "/services", name: "Services", component: ServicePage },
   { path: "/contactus", name: "ContactUs", component: ContactUsPage },
