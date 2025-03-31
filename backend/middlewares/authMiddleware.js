@@ -9,7 +9,6 @@ exports.verifyAdmin = async (req, res, next) => {
   try {
     const token = req.header("Authorization");
     console.log(token);
-    console.log(token);
 
     if (!token) return res.status(401).json({ message: "Unauthorized access" });
 
@@ -28,23 +27,16 @@ exports.verifyAdmin = async (req, res, next) => {
 };
 
 exports.verifyVendor = async (req, res, next) => {
-  console.log("Hello world");
   try {
     let token = req.header("Authorization");
 
-    console.log(token);
     if (!token) return res.status(401).json({ message: "Unauthorized access" });
 
     token = token.split(" ")[1];
-    console.log(token);
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("decoded");
-    console.log(decoded);
-    console.log(decoded.userId);
 
     const user = await User.findById(decoded.userId);
-    console.log(user);
 
     if (!user || user.role !== "vendor") {
       return res.status(403).json({ message: "Access denied. Vendor only." });

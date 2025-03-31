@@ -1,22 +1,35 @@
+// ServiceRoutes.js
 const express = require("express");
 const Service = require("../models/service");
-// Import the Service model
+const { verifyVendor } = require("../middlewares/authMiddleware");
 const router = express.Router();
 
-// ✅ GET all services (New Route)
+// Public routes (no authentication needed)
+router.get("/all-services", async (req, res) => {
+  try {
+    const services = await Service.find().populate("vendorId", "name email"); // Added populate
+    res.status(200).json(services);
+  } catch (error) {
+    console.error("Error fetching all services:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// Protected routes (require vendor authentication)
+router.use(verifyVendor); // All routes after this will require auth
+
 router.get("/services", async (req, res) => {
   const { _id } = req.user;
-  console.log(req.user);
-  console.log(req.user._id);
-  console.log(_id);
   try {
-    const services = await Service.find({ vendorId: _id }); // Fetch all services from the database
+    const services = await Service.find({ vendorId: _id });
     res.status(200).json(services);
   } catch (error) {
     console.error("Error fetching services:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
+
+// ... rest of your protected routes ...
 
 // Add a new service
 router.post("/services", async (req, res) => {
@@ -45,11 +58,6 @@ router.post("/services", async (req, res) => {
       menuPdf,
       vendorId = _id,
     } = req.body;
-
-    // Validate required fields
-    // if (!title || !type || !shortDescription || !location || !vendorId) {
-    //   return res.status(400).json({ message: "Missing required fields" });
-    // }
 
     // Create a new service instance
     const newService = new Service({

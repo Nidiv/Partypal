@@ -19,7 +19,7 @@ app.use(express.json());
 app.use("/api/auth", userRoutes);
 // console.log("User routes mounted at /api/auth");
 
-app.use("/api", verifyVendor, serviceRoutes);
+app.use("/api", serviceRoutes);
 
 app.get("/payment", initiate);
 
