@@ -182,7 +182,9 @@ export default {
   methods: {
     async fetchServices() {
       try {
-        const response = await axios.get("http://localhost:8081/api/services");
+        const response = await axios.get(
+          "http://localhost:8081/api/all-services"
+        );
         this.services = response.data;
       } catch (error) {
         this.error = "Error fetching services. Please try again.";
