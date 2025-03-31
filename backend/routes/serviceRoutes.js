@@ -5,8 +5,12 @@ const router = express.Router();
 
 // ✅ GET all services (New Route)
 router.get("/services", async (req, res) => {
+  const { _id } = req.user;
+  console.log(req.user);
+  console.log(req.user._id);
+  console.log(_id);
   try {
-    const services = await Service.find(); // Fetch all services from the database
+    const services = await Service.find({ vendorId: _id }); // Fetch all services from the database
     res.status(200).json(services);
   } catch (error) {
     console.error("Error fetching services:", error);
@@ -16,6 +20,7 @@ router.get("/services", async (req, res) => {
 
 // Add a new service
 router.post("/services", async (req, res) => {
+  const { _id } = req.user;
   try {
     // Extract service data from the request body
     const {
@@ -38,7 +43,7 @@ router.post("/services", async (req, res) => {
       photos,
       videoLink,
       menuPdf,
-      vendorId = "65f4b5e1c1b2c3d4e5f6a7b8",
+      vendorId = _id,
     } = req.body;
 
     // Validate required fields
