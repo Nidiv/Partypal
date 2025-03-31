@@ -138,7 +138,11 @@ export default {
       this.loading = true;
       this.error = null;
       try {
-        const response = await axios.get("http://localhost:8081/api/services");
+        const response = await axios.get("http://localhost:8081/api/services", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        });
         this.services = response.data;
       } catch (err) {
         this.error = "Failed to load services. Please try again.";

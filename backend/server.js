@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const initiate = require("./routes/payment");
 const serviceRoutes = require("./routes/serviceRoutes");
+const { verifyVendor } = require("./middlewares/authMiddleware");
 const app = express();
 
 // Use the cors middleware
@@ -18,7 +19,7 @@ app.use(express.json());
 app.use("/api/auth", userRoutes);
 // console.log("User routes mounted at /api/auth");
 
-app.use("/api", serviceRoutes);
+app.use("/api", verifyVendor, serviceRoutes);
 
 app.get("/payment", initiate);
 
