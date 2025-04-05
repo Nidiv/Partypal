@@ -107,13 +107,24 @@
             {{ service.priceUnit.replace("_", " ") }}
           </p>
 
-          <!-- View Details Button -->
-          <router-link
-            :to="'/viewdetails/' + service._id"
-            class="mt-4 inline-block px-4 py-2 bg-primary text-white rounded hover:bg-purple-800 transition"
-          >
-            View Details
-          </router-link>
+          <!-- Buttons -->
+          <div class="mt-6 flex flex-wrap gap-2">
+            <!-- View Details Button -->
+            <router-link
+              :to="'/viewdetails/' + service._id"
+              class="px-6 py-2 bg-primary text-white rounded-full font-semibold hover:bg-purple-800 transition"
+            >
+              View Details
+            </router-link>
+
+            <!-- Pay Now Button -->
+            <button
+              @click="initiatePayment"
+              class="px-6 py-2 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition"
+            >
+              Pay Now
+            </button>
+          </div>
         </div>
       </div>
     </section>
@@ -194,6 +205,9 @@ export default {
     },
     filterServices(category) {
       this.activeCategory = category;
+    },
+    initiatePayment() {
+      window.location.href = "http://localhost:8081/payment"; // Redirects to backend
     },
   },
   mounted() {
