@@ -8,7 +8,7 @@
       <div class="max-w-6xl mx-auto">
         <h1 class="text-3xl font-bold text-[#9c4f96] mb-6">My Services</h1>
 
-        <!-- 🔥 Add New Service Button (For Vendors) -->
+        <!-- Add New Service Button -->
         <div class="flex justify-between items-center mb-6">
           <p class="text-lg">Manage your services here.</p>
           <router-link
@@ -65,7 +65,8 @@
               v-if="service.photos && service.photos.length"
               :src="service.photos[0].url"
               alt="Service Image"
-              class="w-full h-40 object-cover"
+              class="w-full h-40 object-cover cursor-pointer"
+              @click="openServiceModal(service)"
             />
             <div class="p-4">
               <h2 class="text-xl font-semibold text-[#9c4f96]">
@@ -73,16 +74,18 @@
               </h2>
               <p class="text-[#bdc3c7] text-sm">{{ service.type }}</p>
               <p class="mt-2 text-white font-bold">
-                Rs. {{ service.basePrice }} ({{ service.priceUnit }})
+                Rs. {{ service.basePrice }} ({{
+                  formatPriceUnit(service.priceUnit)
+                }})
               </p>
 
               <!-- View Details Button -->
-              <router-link
-                :to="'/services/' + service._id"
-                class="mt-4 inline-block px-4 py-2 bg-[#6a1b9a] text-white rounded-md hover:bg-[#9c4f96] transition"
+              <button
+                @click="openServiceModal(service)"
+                class="mt-4 w-full px-4 py-2 bg-[#6a1b9a] text-white rounded-md hover:bg-[#9c4f96] transition"
               >
                 View Details
-              </router-link>
+              </button>
             </div>
           </div>
         </div>
@@ -95,26 +98,169 @@
           No services found.
         </div>
       </div>
+
+      <!-- Service Details Modal (Vendor View) -->
+      <div
+        v-if="selectedService"
+        class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50"
+        @click.self="selectedService = null"
+      >
+        <div
+          class="bg-[#34495e] rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+        >
+          <!-- Modal Header -->
+          <div
+            class="sticky top-0 bg-[#2c3e50] p-4 border-b border-[#9c4f96] flex justify-between items-center"
+          >
+            <h2 class="text-xl font-bold text-[#9c4f96]">
+              {{ selectedService.title }}
+            </h2>
+            <button
+              @click="selectedService = null"
+              class="text-white hover:text-[#bdc3c7] transition-colors"
+            >
+              ✕
+            </button>
+          </div>
+
+          <!-- Modal Content -->
+          <div class="p-6">
+            <!-- Image Gallery -->
+            <div v-if="selectedService.photos?.length" class="mb-8">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div
+                  v-for="(photo, index) in selectedService.photos"
+                  :key="index"
+                  class="aspect-video bg-[#2c3e50] rounded-lg overflow-hidden"
+                >
+                  <img :src="photo.url" class="w-full h-full object-cover" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Basic Info -->
+            <div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-4">
+                <div>
+                  <p class="text-sm text-[#bdc3c7]">Service Type</p>
+                  <p class="font-medium capitalize">
+                    {{ selectedService.type }}
+                  </p>
+                </div>
+                <div>
+                  <p class="text-sm text-[#bdc3c7]">Price</p>
+                  <p class="font-medium">
+                    Rs. {{ selectedService.basePrice }} /
+                    {{ formatPriceUnit(selectedService.priceUnit) }}
+                  </p>
+                </div>
+                <div>
+                  <p class="text-sm text-[#bdc3c7]">Location</p>
+                  <p class="font-medium">
+                    {{ selectedService.location || "Not specified" }}
+                  </p>
+                </div>
+              </div>
+              <div class="space-y-4">
+                <div>
+                  <p class="text-sm text-[#bdc3c7]">Capacity</p>
+                  <p class="font-medium">
+                    {{ selectedService.minGuests || 1 }} -
+                    {{ selectedService.maxGuests || "∞" }} guests
+                  </p>
+                </div>
+                <div>
+                  <p class="text-sm text-[#bdc3c7]">Advance Payment</p>
+                  <p class="font-medium">
+                    {{ selectedService.advancePayment || 0 }}% required
+                  </p>
+                </div>
+                <div>
+                  <p class="text-sm text-[#bdc3c7]">Status</p>
+                  <p class="font-medium capitalize">
+                    {{ selectedService.status || "Active" }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-8">
+              <h3
+                class="text-lg font-semibold mb-4 pb-2 border-b border-[#9c4f96]"
+              >
+                Description
+              </h3>
+              <p class="whitespace-pre-line text-[#bdc3c7]">
+                {{
+                  selectedService.detailedDescription ||
+                  "No description provided."
+                }}
+              </p>
+            </div>
+
+            <!-- Packages (If Any) -->
+            <div v-if="selectedService.packages?.length" class="mb-8">
+              <h3
+                class="text-lg font-semibold mb-4 pb-2 border-b border-[#9c4f96]"
+              >
+                Packages
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div
+                  v-for="pkg in selectedService.packages"
+                  :key="pkg.name"
+                  class="border border-[#9c4f96] rounded-lg p-4"
+                >
+                  <h4 class="font-bold text-lg">{{ pkg.name }}</h4>
+                  <p class="text-[#9c4f96] font-bold">Rs. {{ pkg.price }}</p>
+                  <p class="text-[#bdc3c7] my-2">{{ pkg.description }}</p>
+                  <div v-if="pkg.features?.length">
+                    <p class="font-medium text-sm">Includes:</p>
+                    <ul class="list-disc list-inside text-sm text-[#bdc3c7]">
+                      <li v-for="(feature, i) in pkg.features" :key="i">
+                        {{ feature }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal Footer -->
+          <div
+            class="sticky bottom-0 bg-[#2c3e50] p-4 border-t border-[#9c4f96] flex justify-end"
+          >
+            <button
+              @click="selectedService = null"
+              class="px-6 py-2 bg-[#6a1b9a] text-white rounded-md hover:bg-[#9c4f96] transition"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
 </template>
 
 <script>
-import NavVendor from "@/components/vendor/Nav-Vendor.vue"; // Adjust the path if necessary
+import NavVendor from "@/components/vendor/Nav-Vendor.vue";
 import axios from "axios";
 
 export default {
   components: {
-    NavVendor, // Register the NavVendor component
+    NavVendor,
   },
-  name: "VendorServices",
   data() {
     return {
-      services: [], // Stores fetched services
+      services: [],
       loading: true,
       error: null,
       searchQuery: "",
       selectedType: "",
+      selectedService: null, // For modal
     };
   },
   computed: {
@@ -150,6 +296,30 @@ export default {
         this.loading = false;
       }
     },
+    openServiceModal(service) {
+      this.selectedService = service;
+    },
+    formatPriceUnit(unit) {
+      const units = {
+        per_person: "per person",
+        per_event: "per event",
+        per_hour: "per hour",
+        per_day: "per day",
+      };
+      return units[unit] || unit.replace("_", " ");
+    },
   },
 };
 </script>
+
+<style scoped>
+/* Smooth modal transitions */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

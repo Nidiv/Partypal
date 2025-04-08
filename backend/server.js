@@ -13,7 +13,7 @@ const app = express();
 app.use(cors());
 
 // Middleware to parse JSON
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 
 // Use the routes
 app.use("/api/auth", userRoutes);
