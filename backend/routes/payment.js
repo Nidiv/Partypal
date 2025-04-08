@@ -1,8 +1,14 @@
+const Service = require("../models/service");
 const express = require("express");
-const { models } = require("mongoose");
 var request = require("request");
 
-function initiate(req, res) {
+async function initiate(req, res) {
+  const serviceid = req.params["serviceid"];
+  console.log(serviceid);
+  const service = await Service.findById(serviceid);
+  const amount = service.basePrice * 100;
+  console.log(amount);
+
   var options = {
     method: "POST",
     url: "https://dev.khalti.com/api/v2/epayment/initiate/",
@@ -13,7 +19,7 @@ function initiate(req, res) {
     body: JSON.stringify({
       return_url: "http://localhost:3000/home",
       website_url: "http://localhost:3000/home",
-      amount: "100000",
+      amount: amount,
       purchase_order_id: "Order01",
       purchase_order_name: "test",
       customer_info: {
@@ -24,7 +30,9 @@ function initiate(req, res) {
     }),
   };
   request(options, function (error, response) {
-    res.redirect(JSON.parse(response.body).payment_url);
+    console.log(response.body);
+    res.send(JSON.parse(response.body));
+
     if (error) throw new Error(error);
     console.log(response.body);
   });
