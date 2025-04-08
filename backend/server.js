@@ -21,7 +21,7 @@ app.use("/api/auth", userRoutes);
 
 app.use("/api", serviceRoutes);
 
-app.get("/payment", initiate);
+app.get("/payment/:serviceid", initiate);
 
 // Debug logs - using a more reliable method
 function printRoutes(router) {
