@@ -36,82 +36,138 @@
     <section id="services" class="py-16 px-6 text-center">
       <h2 class="text-2xl font-bold text-primary">Our Services</h2>
 
-      <!-- Dynamic Service Cards -->
-      <div v-if="loading" class="text-lg text-center mt-6">
-        Loading services...
-      </div>
+      <!-- Service Cards -->
+      <div v-if="loading" class="text-lg text-center mt-6">Loading...</div>
       <div v-if="error" class="text-red-500 text-lg text-center mt-6">
         {{ error }}
       </div>
 
       <div
-        v-if="!loading && featuredServices.length > 0"
+        v-if="!loading"
         class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
       >
         <div
           v-for="service in featuredServices"
           :key="service._id"
-          class="bg-gray-100 p-4 rounded shadow-md"
+          class="bg-gray-100 p-4 rounded shadow-md hover:shadow-lg transition-shadow"
         >
-          <!-- Service Image -->
           <img
-            :src="
-              service.photos.length ? service.photos[0].url : '/placeholder.jpg'
-            "
-            alt="Service Image"
-            class="w-full h-64 object-cover rounded-md"
+            :src="service.photos[0]?.url || '/placeholder.jpg'"
+            class="w-full h-48 object-cover rounded-md cursor-pointer"
+            @click="openModal(service)"
           />
-
-          <!-- Service Info -->
-          <h3 class="text-lg font-semibold text-gray-800 mt-4">
-            {{ service.title }}
-          </h3>
-          <p class="text-gray-600 mt-2">{{ service.shortDescription }}</p>
-          <p class="text-gray-900 font-semibold mt-2">
-            Rs. {{ service.basePrice }} /
-            {{ service.priceUnit.replace("_", " ") }}
+          <h3 class="text-lg font-semibold mt-4">{{ service.title }}</h3>
+          <p class="text-gray-600 mt-2 line-clamp-2">
+            {{ service.shortDescription }}
           </p>
-
-          <!-- View Details Button -->
-          <router-link
-            :to="'/viewdetails/' + service._id"
-            class="mt-4 inline-block px-4 py-2 bg-primary text-white rounded hover:bg-purple-800 transition"
+          <p class="text-primary font-bold mt-2">
+            Rs. {{ service.basePrice }} /
+            {{ formatPriceUnit(service.priceUnit) }}
+          </p>
+          <button
+            @click="openModal(service)"
+            class="mt-4 w-full bg-primary text-white py-2 rounded hover:bg-purple-800 transition"
           >
             View Details
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Service Details Modal -->
+    <div
+      v-if="selectedService"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+    >
+      <div
+        class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+      >
+        <!-- Modal Header -->
+        <div
+          class="sticky top-0 bg-white p-4 border-b flex justify-between items-center"
+        >
+          <h3 class="text-xl font-bold">{{ selectedService.title }}</h3>
+          <button
+            @click="selectedService = null"
+            class="text-gray-500 hover:text-gray-700"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Modal Content -->
+        <div class="p-6">
+          <!-- Image -->
+          <img
+            :src="selectedService.photos[0]?.url || '/placeholder.jpg'"
+            class="w-full h-64 object-cover rounded"
+          />
+
+          <!-- Details -->
+          <div class="mt-6 grid grid-cols-2 gap-4">
+            <div>
+              <p class="text-sm text-gray-500">Service Type</p>
+              <p class="font-medium">{{ selectedService.type }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Price</p>
+              <p class="font-medium">
+                Rs. {{ selectedService.basePrice }} /
+                {{ formatPriceUnit(selectedService.priceUnit) }}
+              </p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Capacity</p>
+              <p class="font-medium">
+                {{ selectedService.minGuests || 1 }}-{{
+                  selectedService.maxGuests
+                }}
+                guests
+              </p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Location</p>
+              <p class="font-medium">{{ selectedService.location || "N/A" }}</p>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="mt-6">
+            <h4 class="font-semibold mb-2">Description</h4>
+            <p class="whitespace-pre-line">
+              {{ selectedService.detailedDescription }}
+            </p>
+          </div>
+
+          <!-- Packages -->
+          <div v-if="selectedService.packages?.length" class="mt-6">
+            <h4 class="font-semibold mb-2">Packages</h4>
+            <div class="space-y-3">
+              <div
+                v-for="pkg in selectedService.packages"
+                :key="pkg.name"
+                class="border p-3 rounded"
+              >
+                <h5 class="font-bold">{{ pkg.name }}</h5>
+                <p class="text-primary font-semibold">Rs. {{ pkg.price }}</p>
+                <p class="text-sm text-gray-600">{{ pkg.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Updated Modal Footer -->
+        <div class="sticky bottom-0 bg-white p-4 border-t flex justify-center">
+          <router-link
+            to="/services"
+            class="px-6 py-2 bg-primary text-white rounded hover:bg-purple-800 transition"
+            @click="selectedService = null"
+          >
+            View All Services
           </router-link>
         </div>
       </div>
-
-      <!-- View All Services Button -->
-      <router-link
-        to="/services"
-        class="mt-6 inline-block bg-primary text-white px-6 py-2 rounded-full font-semibold hover:bg-purple-800 transition"
-      >
-        View All Services
-      </router-link>
-
-      <!-- Pay Now Button -->
-      <button
-        @click="initiatePayment"
-        class="mt-6 bg-primary text-white px-6 py-2 rounded-full font-semibold hover:bg-purple-800 transition"
-      >
-        Pay Now
-      </button>
-    </section>
-
-    <!-- Special Wishes Section -->
-    <section class="py-16 px-6 text-center">
-      <h2 class="text-2xl font-bold text-primary">We Value Your Thoughts</h2>
-      <p class="mt-4 text-lg">
-        We'd love to hear from you and discuss your upcoming plans. Feel free to
-        share your thoughts with us!
-      </p>
-      <button
-        class="mt-6 bg-primary text-white px-6 py-3 rounded hover:bg-purple-800"
-      >
-        Get in Touch
-      </button>
-    </section>
+    </div>
   </div>
 </template>
 
@@ -121,38 +177,39 @@ import axios from "axios";
 export default {
   data() {
     return {
-      services: [],
       featuredServices: [],
       loading: true,
       error: null,
+      selectedService: null,
     };
   },
   methods: {
     async fetchServices() {
       try {
-        const response = await axios.get(
-          "http://localhost:8081/api/all-services"
-        );
-        this.services = response.data;
-        this.selectFeaturedServices();
-      } catch (error) {
-        this.error = "Error fetching services. Please try again.";
+        const res = await axios.get("http://localhost:8081/api/all-services");
+
+        // Shuffle the array
+        const shuffled = res.data.sort(() => 0.5 - Math.random());
+
+        // Pick first 3 randomly shuffled services
+        this.featuredServices = shuffled.slice(0, 3);
+      } catch (err) {
+        this.error = "Failed to load services";
       } finally {
         this.loading = false;
       }
     },
-    selectFeaturedServices() {
-      // Select 3 random services to display on homepage
-      if (this.services.length > 3) {
-        this.featuredServices = [...this.services]
-          .sort(() => 0.5 - Math.random())
-          .slice(0, 3);
-      } else {
-        this.featuredServices = this.services;
-      }
+    openModal(service) {
+      this.selectedService = service;
     },
-    initiatePayment() {
-      window.location.href = "http://localhost:8081/payment"; // Redirects to backend
+    formatPriceUnit(unit) {
+      const units = {
+        per_person: "per person",
+        per_event: "per event",
+        per_hour: "per hour",
+        per_day: "per day",
+      };
+      return units[unit] || unit;
     },
   },
   mounted() {
