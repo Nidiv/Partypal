@@ -97,4 +97,26 @@ router.post("/services", async (req, res) => {
   }
 });
 
+// Add this to your serviceRoutes.js (public route)
+router.get("/service-packages/:serviceId", async (req, res) => {
+  try {
+    const service = await Service.findById(req.params.serviceId).select(
+      "packages basePrice advancePayment"
+    );
+
+    if (!service) {
+      return res.status(404).json({ message: "Service not found" });
+    }
+
+    res.status(200).json({
+      packages: service.packages,
+      basePrice: service.basePrice,
+      advancePayment: service.advancePayment,
+    });
+  } catch (error) {
+    console.error("Error fetching service packages:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 module.exports = router;

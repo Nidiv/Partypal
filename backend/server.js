@@ -9,8 +9,14 @@ const serviceRoutes = require("./routes/serviceRoutes");
 const { verifyVendor } = require("./middlewares/authMiddleware");
 const app = express();
 
-// Use the cors middleware
-app.use(cors());
+// Configure CORS properly
+const corsOptions = {
+  origin: "http://localhost:3000", // Replace with your frontend URL
+  credentials: true, // Allow credentials
+  optionsSuccessStatus: 200, // Some legacy browsers choke on 204
+};
+
+app.use(cors(corsOptions));
 
 // Middleware to parse JSON
 app.use(express.json({ limit: "10mb" }));
@@ -21,7 +27,7 @@ app.use("/api/auth", userRoutes);
 
 app.use("/api", serviceRoutes);
 
-app.get("/payment/:serviceid", initiate);
+app.post("/payment/initiate", initiate);
 
 // Debug logs - using a more reliable method
 function printRoutes(router) {

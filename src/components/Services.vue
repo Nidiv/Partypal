@@ -468,48 +468,250 @@
               <span>{{ selectedService.menuPdf.name || "Download Menu" }}</span>
             </button>
           </div>
-        </div>
 
-        <!-- Modal Footer -->
-        <div
-          class="sticky bottom-0 bg-white p-4 border-t flex justify-between items-center"
-        >
-          <div>
-            <p class="text-sm text-gray-500">Total Estimate</p>
-            <p class="text-xl font-bold text-primary">
-              Rs. {{ calculateTotalPrice().toLocaleString() }}
-            </p>
-          </div>
-          <div class="flex gap-3">
-            <button
-              @click="selectedService = null"
-              class="px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-            >
-              Close
-            </button>
-            <button
-              @click="initiatePayment(selectedService._id)"
-              :disabled="paymentLoading"
-              class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-green-400 flex items-center gap-2"
-            >
-              <span v-if="!paymentLoading">Book Now</span>
-              <span v-else>Processing...</span>
-              <svg
-                v-if="paymentLoading"
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+          <!-- Budget Review -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold mb-4 pb-2 border-b">
+              Budget Review
+            </h3>
+            <div class="bg-gray-50 p-4 rounded-lg">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Base Price -->
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Base Price:</span>
+                  <span class="font-medium">
+                    Rs. {{ selectedService.basePrice.toLocaleString() }}
+                  </span>
+                </div>
+
+                <!-- Package Price (if selected) -->
+                <div v-if="selectedPackage" class="flex justify-between">
+                  <span class="text-gray-600">Package:</span>
+                  <span class="font-medium">
+                    Rs. {{ selectedPackage.price.toLocaleString() }}
+                  </span>
+                </div>
+
+                <!-- Guest Count Adjustment -->
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Guests ({{ guestCount }}):</span>
+                  <span class="font-medium">
+                    (Charge For Extra Guest) Rs.
+                    {{ calculateGuestAdjustment().toLocaleString() }}
+                  </span>
+                </div>
+
+                <!-- Add-ons -->
+                <div v-if="selectedAddOns.length" class="col-span-full">
+                  <div class="border-t pt-2 mt-2">
+                    <p class="text-sm text-gray-500 mb-1">Add-ons:</p>
+                    <div
+                      v-for="addOn in selectedAddOns"
+                      :key="addOn"
+                      class="flex justify-between mb-1"
+                    >
+                      <span class="text-sm">{{ addOn }}</span>
+                      <span class="text-sm font-medium"
+                        >+ Rs. {{ getAddOnPrice(addOn).toLocaleString() }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Total Estimate -->
+                <div class="col-span-full border-t pt-3 mt-2">
+                  <div class="flex justify-between font-bold text-lg">
+                    <span>Total Estimate:</span>
+                    <span class="text-primary">
+                      Rs. {{ calculateTotalPrice().toLocaleString() }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Budget Warning -->
+              <div
+                v-if="isOverBudget"
+                class="mt-4 p-3 bg-yellow-100 text-yellow-800 rounded text-sm"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                />
-              </svg>
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 inline mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                This exceeds your budget of Rs.
+                {{ userBudget.toLocaleString() }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Options -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold mb-4 pb-2 border-b">
+              Payment Options
+            </h3>
+            <div class="space-y-4">
+              <!-- Full Payment Option -->
+              <div
+                class="border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                :class="{
+                  'border-2 border-primary bg-gray-50':
+                    paymentOption === 'full',
+                }"
+                @click="paymentOption = 'full'"
+              >
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 mt-1">
+                    <input
+                      type="radio"
+                      id="payment-full"
+                      v-model="paymentOption"
+                      value="full"
+                      class="h-4 w-4 text-primary focus:ring-primary border-gray-300"
+                    />
+                  </div>
+                  <div class="ml-3">
+                    <label for="payment-full" class="block font-medium"
+                      >Pay Full Amount</label
+                    >
+                    <p class="text-sm text-gray-600 mt-1">
+                      Pay the total amount of Rs.
+                      {{ calculateTotalPrice(true).toLocaleString() }} now.
+                      <!-- Apply discount -->
+                    </p>
+                    <div class="mt-2 text-sm text-green-600">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4 inline mr-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      Get 5% discount on full payment
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Partial Payment Option -->
+              <div
+                class="border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                :class="{
+                  'border-2 border-primary bg-gray-50':
+                    paymentOption === 'partial',
+                }"
+                @click="paymentOption = 'partial'"
+              >
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 mt-1">
+                    <input
+                      type="radio"
+                      id="payment-partial"
+                      v-model="paymentOption"
+                      value="partial"
+                      class="h-4 w-4 text-primary focus:ring-primary border-gray-300"
+                    />
+                  </div>
+                  <div class="ml-3">
+                    <label for="payment-partial" class="block font-medium"
+                      >Pay Partial Amount</label
+                    >
+                    <p class="text-sm text-gray-600 mt-1">
+                      Pay {{ selectedService.advancePayment }}% now (Rs.
+                      {{ calculateAdvancePayment().toLocaleString() }})
+                      <!-- No discount -->
+                      and the rest later.
+                    </p>
+                    <div v-if="paymentOption === 'partial'" class="mt-3">
+                      <label
+                        class="block text-sm font-medium text-gray-700 mb-1"
+                        >Custom Advance Payment (min
+                        {{ selectedService.advancePayment }}%)</label
+                      >
+                      <div class="flex items-center gap-2">
+                        <input
+                          type="range"
+                          v-model.number="customAdvance"
+                          :min="selectedService.advancePayment"
+                          max="100"
+                          class="w-full"
+                        />
+                        <span class="text-sm font-medium w-12"
+                          >{{ customAdvance }}%</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal Footer -->
+          <div
+            class="sticky bottom-0 bg-white p-4 border-t flex justify-between items-center"
+          >
+            <div>
+              <p class="text-sm text-gray-500">Total Estimate</p>
+              <p class="text-xl font-bold text-primary">
+                Rs. {{ calculateTotalPrice().toLocaleString() }}
+              </p>
+            </div>
+            <div class="flex gap-3">
+              <button
+                @click="selectedService = null"
+                class="px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                Close
+              </button>
+              <button
+                @click="initiatePayment(selectedService._id)"
+                :disabled="paymentLoading"
+                class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-green-400 flex items-center gap-2"
+              >
+                <span v-if="!paymentLoading">
+                  {{
+                    paymentOption === "full" ? "Pay Full Amount" : "Pay Advance"
+                  }}
+                  (Rs.
+                  {{
+                    paymentOption === "full"
+                      ? calculateTotalPrice(true).toLocaleString()
+                      : calculateAdvancePayment().toLocaleString()
+                  }})
+                </span>
+                <span v-else>Processing...</span>
+                <svg
+                  v-if="paymentLoading"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 animate-spin"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -594,6 +796,9 @@ export default {
       guestCount: 1,
       selectedAddOns: [],
       specialRequests: "",
+      paymentOption: "full",
+      customAdvance: 0,
+      userBudget: 50000,
     };
   },
   computed: {
@@ -625,6 +830,10 @@ export default {
       );
       return category ? category.label : this.activeCategory;
     },
+    isOverBudget() {
+      if (!this.selectedService) return false;
+      return this.calculateTotalPrice() > this.userBudget;
+    },
   },
   methods: {
     async fetchServices() {
@@ -648,10 +857,11 @@ export default {
     openServiceModal(service) {
       this.selectedService = service;
       this.selectedPackage = null;
-      this.guestCount = service.minGuests || 1;
+      this.guestCount = service?.minGuests || 1;
       this.selectedAddOns = [];
       this.specialRequests = "";
       this.lightboxOpen = false;
+      this.customAdvance = service?.advancePayment || 20;
     },
     openLightbox(index) {
       this.currentImageIndex = index;
@@ -667,34 +877,53 @@ export default {
       link.click();
       document.body.removeChild(link);
     },
-    calculateTotalPrice() {
-      if (this.selectedPackage) {
-        let total = this.selectedPackage.price;
-        // Add pricing logic for add-ons if needed
-        return total;
-      }
-      return this.selectedService.basePrice;
-    },
-    initiateBooking() {
-      const bookingData = {
-        serviceId: this.selectedService._id,
-        package: this.selectedPackage
-          ? {
-              id: this.selectedPackage._id,
-              name: this.selectedPackage.name,
-            }
-          : null,
-        guestCount: this.guestCount,
-        addOns: this.selectedAddOns,
-        specialRequests: this.specialRequests,
-        totalPrice: this.calculateTotalPrice(),
-      };
+    calculateGuestAdjustment() {
+      if (!this.selectedPackage || !this.selectedService) return 0;
 
-      console.log("Booking data:", bookingData);
-      // this.$router.push({
-      //   path: '/booking',
-      //   query: bookingData
-      // });
+      const baseGuests =
+        Number(this.selectedPackage.baseGuests) ||
+        Number(this.selectedService.minGuests);
+      const additionalPrice =
+        Number(this.selectedPackage.additionalGuestPrice) || 0;
+      const guestCount = Number(this.guestCount);
+
+      return Math.max(0, guestCount - baseGuests) * additionalPrice;
+    },
+    getAddOnPrice() {
+      return 1000;
+    },
+    calculateTotalPrice(applyDiscount = false) {
+      if (!this.selectedService) return 0;
+
+      let total = 0;
+
+      if (this.selectedPackage && this.selectedPackage.price) {
+        total = Number(this.selectedPackage.price);
+        total += this.calculateGuestAdjustment();
+      } else {
+        total = Number(this.selectedService.basePrice);
+      }
+
+      // Add add-ons cost
+      this.selectedAddOns.forEach(() => {
+        total += this.getAddOnPrice();
+      });
+
+      // Only apply discount if explicitly requested (for full payment)
+      if (applyDiscount && this.paymentOption === "full") {
+        total = total * 0.95; // 5% discount
+      }
+
+      return total;
+    },
+
+    calculateAdvancePayment() {
+      // Calculate base amount WITHOUT discount
+      const baseAmount = this.calculateTotalPrice(false);
+      const percentage =
+        this.paymentOption === "partial" ? Number(this.customAdvance) : 100;
+
+      return Math.round(baseAmount * (percentage / 100));
     },
     formatPriceUnit(unit) {
       const units = {
@@ -721,19 +950,97 @@ export default {
     async initiatePayment(serviceId) {
       try {
         this.paymentLoading = true;
-        const response = await axios.get(
-          `http://localhost:8081/payment/${serviceId}`
+
+        // Debug logging
+        console.log("Looking for auth token in localStorage");
+
+        // Get the authentication token from localStorage
+        const authToken = localStorage.getItem("authToken");
+        console.log("Auth token exists:", !!authToken);
+
+        if (!authToken) {
+          console.log("No auth token found - redirecting to auth");
+          this.error = "Please log in to continue";
+          this.$router.push("/auth");
+          return;
+        }
+
+        // Try to extract user ID from the token if possible
+        // Or make an API call to get the user information
+
+        // For JWT tokens, you can try to decode them
+        let userId;
+        try {
+          // Basic JWT parsing (middle part contains payload)
+          const payload = JSON.parse(atob(authToken.split(".")[1]));
+          userId = payload.userId || payload.sub || payload._id || payload.id;
+          console.log("Extracted user ID from token:", userId);
+        } catch (e) {
+          console.log("Could not extract user ID from token");
+        }
+
+        // If you can't extract the ID from the token, make an API call
+        if (!userId) {
+          try {
+            const userResponse = await axios.get(
+              "http://localhost:8081/api/auth/me",
+              {
+                headers: {
+                  Authorization: `Bearer ${authToken}`,
+                },
+              }
+            );
+            userId = userResponse.data._id;
+            console.log("Got user ID from API:", userId);
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+            this.error = "Session expired. Please log in again.";
+            this.$router.push("/auth");
+            return;
+          }
+        }
+
+        const paymentData = {
+          serviceId,
+          user: userId,
+          packageId: this.selectedPackage?._id,
+          guestCount: this.guestCount,
+          addOns: this.selectedAddOns,
+          specialRequests: this.specialRequests,
+          paymentOption: this.paymentOption,
+          amount:
+            this.paymentOption === "full"
+              ? this.calculateTotalPrice(true)
+              : this.calculateAdvancePayment(),
+          isFullPayment: this.paymentOption === "full",
+        };
+
+        // Rest of your code remains the same
+        const baseURL = window.location.origin.includes("localhost")
+          ? "http://localhost:8081"
+          : "";
+
+        const response = await axios.post(
+          `${baseURL}/payment/initiate`,
+          paymentData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              // Add the correct authorization header using authToken
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
         );
 
         if (response.data.payment_url) {
-          // Redirect to Khalti payment page
           window.location.href = response.data.payment_url;
         } else {
-          throw new Error("Payment URL not received");
+          throw new Error("No payment URL received");
         }
       } catch (error) {
         console.error("Payment error:", error);
-        this.error = "Failed to initiate payment. Please try again.";
+        this.error =
+          error.response?.data?.message || "Payment failed. Please try again.";
       } finally {
         this.paymentLoading = false;
       }
@@ -741,6 +1048,7 @@ export default {
   },
   mounted() {
     this.fetchServices();
+    this.customAdvance = this.selectedService?.advancePayment || 20;
   },
   watch: {
     searchQuery() {
