@@ -168,6 +168,19 @@
         </div>
       </div>
     </div>
+    <!-- Special Wishes Section -->
+    <section class="py-16 px-6 text-center">
+      <h2 class="text-2xl font-bold text-primary">We Value Your Thoughts</h2>
+      <p class="mt-4 text-lg">
+        We'd love to hear from you and discuss your upcoming plans. Feel free to
+        share your thoughts with us!
+      </p>
+      <button
+        class="mt-6 bg-primary text-white px-6 py-3 rounded hover:bg-purple-800"
+      >
+        Get in Touch
+      </button>
+    </section>
   </div>
 </template>
 
