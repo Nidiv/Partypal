@@ -268,6 +268,37 @@
             </div>
           </div>
 
+          <!-- Event Date Picker -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold mb-4 pb-2 border-b">Event Date</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >Event Date</label
+                >
+                <input
+                  type="date"
+                  v-model="eventDate"
+                  :min="minSelectableDate"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                />
+                <p class="text-xs text-gray-500 mt-1">
+                  Please select your event date
+                </p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >Event Time</label
+                >
+                <input
+                  type="time"
+                  v-model="eventTime"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                />
+              </div>
+            </div>
+          </div>
+
           <!-- Description -->
           <div class="mb-8">
             <h3 class="text-lg font-semibold mb-4 pb-2 border-b">
@@ -584,7 +615,6 @@
                     <p class="text-sm text-gray-600 mt-1">
                       Pay the total amount of Rs.
                       {{ calculateTotalPrice(true).toLocaleString() }} now.
-                      <!-- Apply discount -->
                     </p>
                     <div class="mt-2 text-sm text-green-600">
                       <svg
@@ -632,9 +662,8 @@
                     >
                     <p class="text-sm text-gray-600 mt-1">
                       Pay {{ selectedService.advancePayment }}% now (Rs.
-                      {{ calculateAdvancePayment().toLocaleString() }})
-                      <!-- No discount -->
-                      and the rest later.
+                      {{ calculateAdvancePayment().toLocaleString() }}) and the
+                      rest later.
                     </p>
                     <div v-if="paymentOption === 'partial'" class="mt-3">
                       <label
@@ -670,6 +699,9 @@
               <p class="text-xl font-bold text-primary">
                 Rs. {{ calculateTotalPrice().toLocaleString() }}
               </p>
+              <p v-if="eventDate" class="text-sm text-gray-500 mt-1">
+                For {{ formatEventDate() }}
+              </p>
             </div>
             <div class="flex gap-3">
               <button
@@ -680,7 +712,7 @@
               </button>
               <button
                 @click="initiatePayment(selectedService._id)"
-                :disabled="paymentLoading"
+                :disabled="paymentLoading || !eventDate"
                 class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:bg-green-400 flex items-center gap-2"
               >
                 <span v-if="!paymentLoading">
@@ -757,7 +789,7 @@
           to share your thoughts with us!
         </p>
         <router-link
-          to="/contact"
+          to="/contactus"
           class="inline-block mt-6 bg-primary text-white px-6 py-3 rounded-md hover:bg-purple-700 transition-colors"
         >
           Get in Touch
@@ -799,6 +831,8 @@ export default {
       paymentOption: "full",
       customAdvance: 0,
       userBudget: 50000,
+      eventDate: "",
+      eventTime: "19:00", // Default to 7 PM
     };
   },
   computed: {
@@ -822,6 +856,12 @@ export default {
 
         return matchesSearch && matchesCategory && matchesPrice;
       });
+    },
+    minSelectableDate() {
+      // Set minimum date to today
+      const today = new Date();
+      today.setDate(today.getDate());
+      return today.toISOString().split("T")[0];
     },
     activeCategoryLabel() {
       if (this.activeCategory === "all") return "All Categories";
@@ -851,6 +891,25 @@ export default {
         this.loading = false;
       }
     },
+    formatEventDate() {
+      if (!this.eventDate) return "";
+
+      const options = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+      const date = new Date(this.eventDate);
+
+      let formatted = date.toLocaleDateString("en-US", options);
+
+      if (this.eventTime) {
+        formatted += ` at ${this.eventTime}`;
+      }
+
+      return formatted;
+    },
     filterServices(category) {
       this.activeCategory = category;
     },
@@ -862,6 +921,8 @@ export default {
       this.specialRequests = "";
       this.lightboxOpen = false;
       this.customAdvance = service?.advancePayment || 20;
+      this.eventDate = ""; // Reset event date when opening modal
+      this.eventTime = "19:00"; // Reset to default time
     },
     openLightbox(index) {
       this.currentImageIndex = index;
@@ -948,6 +1009,10 @@ export default {
       );
     },
     async initiatePayment(serviceId) {
+      if (!this.eventDate) {
+        this.error = "Please select an event date";
+        return;
+      }
       try {
         this.paymentLoading = true;
 
@@ -1013,6 +1078,8 @@ export default {
               ? this.calculateTotalPrice(true)
               : this.calculateAdvancePayment(),
           isFullPayment: this.paymentOption === "full",
+          eventDate: this.eventDate,
+          eventTime: this.eventTime,
         };
 
         // Rest of your code remains the same

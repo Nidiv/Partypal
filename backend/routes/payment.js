@@ -55,9 +55,8 @@ async function initiate(req, res) {
         purchase_order_id: savedBooking._id, // Use booking ID as reference
         purchase_order_name: `Booking for ${service.title}`,
         customer_info: {
-          name: req.user?.username || "Guest User",
-          email: req.user?.email || "guest@example.com",
-          phone: req.user?.phone || "9800000000",
+          name: req.user?.username || "Nidiv Kayastha",
+          email: req.user?.email || "Nidiv@gmail.com",
         },
       }),
     };
