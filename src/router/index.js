@@ -8,6 +8,7 @@ import ContactUsPage from "../components/ContactUs.vue"; // Contact Us Page
 import NotFound from "../components/NotFound.vue"; // 404 Page (Not Found)
 import AdminHome from "../components/admin/AdminHome.vue";
 import VendorServices from "../components/vendor/VendorServices.vue"; // Vendor Services
+import MyBookings from "../components/MyBookings.vue";
 import ViewDetails from "../components/vendor/ViewDetails.vue"; // Vendor Services
 
 const routes = [
@@ -29,6 +30,11 @@ const routes = [
     path: "/adminhome",
     name: "AdminHome",
     component: AdminHome,
+  },
+  {
+    path: "/my-bookings",
+    name: "MyBookings",
+    component: MyBookings,
   },
 ];
 
