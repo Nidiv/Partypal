@@ -22,6 +22,12 @@
         My Services
       </router-link>
       <router-link
+        to="/bookinghistory"
+        class="text-white hover:text-[#9c4f96] transition block"
+      >
+        User Bookings
+      </router-link>
+      <router-link
         to="/messages"
         class="text-white hover:text-[#9c4f96] transition block"
       >
@@ -31,8 +37,8 @@
         to="/profile"
         class="text-white hover:text-[#9c4f96] transition block"
       >
-        Profile
-      </router-link>
+        Profile </router-link
+      >us
       <button
         @click="logout"
         class="text-white hover:text-[#9c4f96] transition block text-left w-full"

@@ -7,7 +7,10 @@ dotenv.config();
 const initiate = require("./routes/payment");
 const serviceRoutes = require("./routes/serviceRoutes");
 const { verifyUser } = require("./middlewares/authMiddleware");
+const { verifyVendor } = require("./middlewares/authMiddleware");
+
 const bookingRoutes = require("./routes/bookingRoutes");
+const vendorRoutes = require("./routes/vendorRoutes");
 const app = express();
 
 // Configure CORS properly
@@ -31,6 +34,8 @@ app.use("/api", serviceRoutes);
 app.post("/payment/initiate", verifyUser, initiate);
 
 app.use("/booking", verifyUser, bookingRoutes);
+
+app.use("/vendor", verifyVendor, vendorRoutes);
 
 // Debug logs - using a more reliable method
 function printRoutes(router) {
