@@ -79,12 +79,6 @@
                   Rs. {{ formatNumber(booking.advanceAmount) }}
                 </p>
               </div>
-              <div>
-                <p class="text-sm text-gray-500">Package</p>
-                <p class="font-medium">
-                  {{ booking.package?.name || "Not Selected" }}
-                </p>
-              </div>
             </div>
 
             <!-- Service Info -->

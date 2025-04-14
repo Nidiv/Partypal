@@ -11,6 +11,7 @@ import VendorServices from "../components/vendor/VendorServices.vue"; // Vendor 
 import MyBookings from "../components/MyBookings.vue";
 import ViewDetails from "../components/vendor/ViewDetails.vue"; // Vendor Services
 import VerifyPayment from "../components/VerifyPayment.vue"; //Verify Payment
+import BookingHistory from "../components/vendor/BookingHistory.vue"; //User Booking
 
 const routes = [
   { path: "/", redirect: "/auth" }, // Redirect to Auth page
@@ -23,6 +24,11 @@ const routes = [
     path: "/vendorservices",
     name: "VendorServices",
     component: VendorServices,
+  },
+  {
+    path: "/bookinghistory",
+    name: "BookingHistory",
+    component: BookingHistory,
   },
   { path: "/aboutus", name: "AboutUs", component: AboutUs },
   { path: "/services", name: "Services", component: ServicePage },
