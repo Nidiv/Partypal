@@ -1099,6 +1099,9 @@ export default {
           }
         );
 
+        console.log("response");
+        console.log(response.data);
+        localStorage.setItem("bookingId", response.data.bookingId);
         if (response.data.payment_url) {
           window.location.href = response.data.payment_url;
         } else {

@@ -64,6 +64,9 @@
                 style="focus-ring-color: #6a1b9a"
               />
             </div>
+            <p v-if="errors.username" class="mt-1 text-xs text-red-500">
+              {{ errors.username }}
+            </p>
           </div>
 
           <!-- Email (Only for Signup) -->
@@ -102,6 +105,9 @@
                 style="focus-ring-color: #6a1b9a"
               />
             </div>
+            <p v-if="errors.email" class="mt-1 text-xs text-red-500">
+              {{ errors.email }}
+            </p>
           </div>
 
           <!-- Password -->
@@ -134,7 +140,7 @@
                 id="password"
                 v-model="password"
                 :type="showPassword ? 'text' : 'password'"
-                placeholder="Enter your password"
+                placeholder="Enter your password (min. 6 characters)"
                 class="w-full pl-10 pr-14 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
                 style="focus-ring-color: #6a1b9a"
                 @keyup.enter="handleAuth"
@@ -148,6 +154,68 @@
                 {{ showPassword ? "Hide" : "Show" }}
               </button>
             </div>
+            <p v-if="errors.password" class="mt-1 text-xs text-red-500">
+              {{ errors.password }}
+            </p>
+            <p
+              v-if="formType === 'signup'"
+              class="mt-1 text-xs"
+              style="color: #34495e"
+            >
+              Password must be at least 6 characters
+            </p>
+          </div>
+
+          <!-- Password Strength Meter (Only for Signup) -->
+          <div v-if="formType === 'signup' && password.length > 0" class="mb-5">
+            <div class="flex items-center mb-1">
+              <div class="flex-1 h-1 rounded-full bg-gray-200">
+                <div
+                  class="h-1 rounded-full transition-all duration-300"
+                  :style="{
+                    width: `${passwordStrength.score * 25}%`,
+                    backgroundColor: passwordStrength.color,
+                  }"
+                ></div>
+              </div>
+              <span
+                class="ml-2 text-xs"
+                :style="{ color: passwordStrength.color }"
+              >
+                {{ passwordStrength.text }}
+              </span>
+            </div>
+            <ul v-if="password.length > 0" class="space-y-1 mt-2">
+              <li
+                class="text-xs flex items-center"
+                :style="{ color: password.length >= 6 ? '#27ae60' : '#e74c3c' }"
+              >
+                <span class="mr-1">{{ password.length >= 6 ? "✓" : "✗" }}</span>
+                At least 6 characters
+              </li>
+              <li
+                class="text-xs flex items-center"
+                :style="{
+                  color: /[A-Z]/.test(password) ? '#27ae60' : '#e74c3c',
+                }"
+              >
+                <span class="mr-1">{{
+                  /[A-Z]/.test(password) ? "✓" : "✗"
+                }}</span>
+                Uppercase letter
+              </li>
+              <li
+                class="text-xs flex items-center"
+                :style="{
+                  color: /[0-9]/.test(password) ? '#27ae60' : '#e74c3c',
+                }"
+              >
+                <span class="mr-1">{{
+                  /[0-9]/.test(password) ? "✓" : "✗"
+                }}</span>
+                Number
+              </li>
+            </ul>
           </div>
 
           <!-- Role Selection (Only for Signup) -->
@@ -270,10 +338,12 @@
                 for="documents"
                 class="block text-sm font-medium mb-1"
                 style="color: #2c3e50"
-                >Upload Citizenship Documents</label
+                >Upload Citizenship Documents
+                <span class="text-red-500">*</span></label
               >
               <div
                 class="border-2 border-dashed rounded-lg p-4 text-center transition-colors duration-200"
+                :class="{ 'border-red-400': errors.documents }"
                 style="border-color: #bdc3c7; hover-border-color: #6a1b9a"
               >
                 <input
@@ -330,6 +400,9 @@
                   </span>
                 </div>
               </div>
+              <p v-if="errors.documents" class="mt-1 text-xs text-red-500">
+                {{ errors.documents }}
+              </p>
             </div>
 
             <!-- Service Type -->
@@ -337,12 +410,13 @@
               <label
                 class="block text-sm font-medium mb-1"
                 style="color: #2c3e50"
-                >Service Type</label
+                >Service Type <span class="text-red-500">*</span></label
               >
               <div class="relative">
                 <select
                   v-model="serviceType"
                   class="block w-full pl-3 pr-10 py-3 text-base border rounded-lg appearance-none focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
+                  :class="{ 'border-red-400': errors.serviceType }"
                   style="
                     border-color: #bdc3c7;
                     color: #2c3e50;
@@ -372,6 +446,9 @@
                   </svg>
                 </div>
               </div>
+              <p v-if="errors.serviceType" class="mt-1 text-xs text-red-500">
+                {{ errors.serviceType }}
+              </p>
             </div>
           </div>
 
@@ -456,6 +533,54 @@
         </button>
       </div>
     </div>
+
+    <!-- Success Popup -->
+    <div
+      v-if="showSuccessPopup"
+      class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 transition-opacity duration-300"
+    >
+      <div
+        class="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl transform transition-all duration-300 scale-100"
+      >
+        <div
+          class="flex items-center justify-center w-12 h-12 rounded-full mx-auto mb-4"
+          style="background-color: rgba(39, 174, 96, 0.1)"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            style="color: #27ae60"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-center mb-2" style="color: #2c3e50">
+          Success
+        </h3>
+        <p class="text-center mb-6" style="color: #34495e">
+          {{ successMessage }}
+        </p>
+        <button
+          @click="showSuccessPopup = false"
+          class="w-full py-2 rounded-lg text-white font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
+          style="
+            background-color: #27ae60;
+            hover-background-color: #219653;
+            focus-ring-color: #27ae60;
+          "
+        >
+          OK
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -474,8 +599,50 @@ export default {
       documents: [], // Array to store the selected documents
       showPassword: false,
       showErrorPopup: false,
+      showSuccessPopup: false,
       errorMessage: "",
+      successMessage: "",
+      errors: {
+        username: "",
+        email: "",
+        password: "",
+        documents: "",
+        serviceType: "",
+      },
+      formSubmitting: false,
     };
+  },
+  computed: {
+    passwordStrength() {
+      if (!this.password) {
+        return { score: 0, text: "", color: "#bdc3c7" };
+      }
+
+      let score = 0;
+
+      // Length check
+      if (this.password.length >= 6) score += 1;
+      if (this.password.length >= 8) score += 1;
+
+      // Character variety check
+      if (/[A-Z]/.test(this.password)) score += 1;
+      if (/[0-9]/.test(this.password)) score += 1;
+      if (/[^A-Za-z0-9]/.test(this.password)) score += 1;
+
+      const strengthMap = [
+        { text: "Very Weak", color: "#e74c3c" },
+        { text: "Weak", color: "#e67e22" },
+        { text: "Medium", color: "#f1c40f" },
+        { text: "Strong", color: "#2ecc71" },
+        { text: "Very Strong", color: "#27ae60" },
+      ];
+
+      return {
+        score: score / 5,
+        text: strengthMap[Math.min(score, 4)].text,
+        color: strengthMap[Math.min(score, 4)].color,
+      };
+    },
   },
   created() {
     // Redirect if user is already logged in
@@ -487,20 +654,102 @@ export default {
   methods: {
     toggleForm() {
       this.formType = this.formType === "login" ? "signup" : "login";
-      // Reset role and other fields when switching to login
+      // Reset fields and errors when switching forms
+      this.resetForm();
+    },
+
+    resetForm() {
+      // Reset form fields when toggling between login and signup
       if (this.formType === "login") {
-        this.role = "user"; // Default role for login is user
-        this.serviceType = ""; // Reset the service type
-        this.documents = []; // Clear any previously uploaded documents
+        this.role = "user";
+        this.serviceType = "";
+        this.documents = [];
+        this.email = "";
+      }
+
+      // Clear all errors
+      this.clearErrors();
+
+      // Don't clear username/password to improve UX when switching forms
+    },
+
+    clearErrors() {
+      for (const key in this.errors) {
+        this.errors[key] = "";
       }
     },
+
+    validateForm() {
+      this.clearErrors();
+      let isValid = true;
+
+      // Username validation
+      if (!this.username.trim()) {
+        this.errors.username = "Username is required";
+        isValid = false;
+      } else if (this.username.length < 3) {
+        this.errors.username = "Username must be at least 3 characters";
+        isValid = false;
+      }
+
+      // Password validation
+      if (!this.password) {
+        this.errors.password = "Password is required";
+        isValid = false;
+      } else if (this.formType === "signup" && this.password.length < 6) {
+        this.errors.password = "Password must be at least 6 characters";
+        isValid = false;
+      }
+
+      // Additional validation for signup
+      if (this.formType === "signup") {
+        // Email validation
+        if (!this.email) {
+          this.errors.email = "Email is required";
+          isValid = false;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) {
+          this.errors.email = "Please enter a valid email address";
+          isValid = false;
+        }
+
+        // Vendor-specific validations
+        if (this.role === "vendor") {
+          // Service type validation
+          if (!this.serviceType) {
+            this.errors.serviceType = "Please select a service type";
+            isValid = false;
+          }
+
+          // Document validation
+          if (this.documents.length === 0) {
+            this.errors.documents = "Please upload your citizenship documents";
+            isValid = false;
+          }
+        }
+      }
+
+      return isValid;
+    },
+
     async handleAuth() {
-      if (this.formType === "login") {
-        this.login();
-      } else {
-        this.signup();
+      if (this.formSubmitting) return; // Prevent multiple submissions
+
+      // Validate form before submitting
+      if (!this.validateForm()) {
+        return;
       }
+
+      this.formSubmitting = true;
+
+      if (this.formType === "login") {
+        await this.login();
+      } else {
+        await this.signup();
+      }
+
+      this.formSubmitting = false;
     },
+
     async login() {
       try {
         const response = await axios.post(
@@ -554,6 +803,11 @@ export default {
 
     async signup() {
       try {
+        // Client-side validation before submitting
+        if (!this.validateForm()) {
+          return;
+        }
+
         const formData = new FormData();
         formData.append("username", this.username);
         formData.append("email", this.email);
@@ -584,66 +838,198 @@ export default {
         if (this.role === "vendor") {
           this.successMessage =
             "Signup successful! Your account is pending admin approval.";
+          this.showSuccessPopup = true;
+
+          // Switch to login form after 3 seconds
+          setTimeout(() => {
+            this.showSuccessPopup = false;
+            this.formType = "login";
+            this.resetForm();
+          }, 3000);
         } else {
           this.successMessage = "Signup successful! You can now log in.";
+          this.showSuccessPopup = true;
 
           // Auto-login for regular users
-          const loginResponse = await axios.post(
-            "http://localhost:8081/api/auth/login",
-            {
-              username: this.username,
-              password: this.password,
-            }
-          );
+          try {
+            const loginResponse = await axios.post(
+              "http://localhost:8081/api/auth/login",
+              {
+                username: this.username,
+                password: this.password,
+              }
+            );
 
-          // Store token & role in localStorage
-          localStorage.setItem("authToken", loginResponse.data.token);
-          localStorage.setItem("userRole", loginResponse.data.user.role);
+            // Store token & role in localStorage
+            localStorage.setItem("authToken", loginResponse.data.token);
+            localStorage.setItem("userRole", loginResponse.data.user.role);
 
-          // Redirect based on role
-          this.$router.push("/home");
+            // Redirect based on role
+            setTimeout(() => {
+              this.showSuccessPopup = false;
+              this.$router.push("/home");
+            }, 1500);
+          } catch (loginError) {
+            // If auto-login fails, just stay on success message
+            setTimeout(() => {
+              this.showSuccessPopup = false;
+              this.formType = "login";
+              this.resetForm();
+            }, 3000);
+          }
         }
-
-        // Clear form fields after successful signup
-        this.username = "";
-        this.email = "";
-        this.password = "";
-        this.role = "user";
-        this.serviceType = "";
-        this.documents = [];
       } catch (error) {
         if (error.response) {
-          this.errorMessage =
-            error.response.data?.message || "Signup failed. Please try again.";
-        } else {
+          // Handle specific API error responses
+          const { status, data } = error.response;
+
+          if (status === 409) {
+            // Username or email already exists
+            if (data.message.includes("Username")) {
+              this.errors.username = "This username is already taken";
+            } else if (data.message.includes("Email")) {
+              this.errors.email = "This email is already registered";
+            } else {
+              this.errorMessage =
+                data.message || "Signup failed. Please try again.";
+              this.showErrorPopup = true;
+            }
+          } else if (status === 400) {
+            // Validation errors from the server
+            if (data.errors && Array.isArray(data.errors)) {
+              // Process validation errors from the server
+              data.errors.forEach((err) => {
+                if (err.field === "username")
+                  this.errors.username = err.message;
+                else if (err.field === "email") this.errors.email = err.message;
+                else if (err.field === "password")
+                  this.errors.password = err.message;
+                else if (err.field === "serviceType")
+                  this.errors.serviceType = err.message;
+                else if (err.field === "documents")
+                  this.errors.documents = err.message;
+              });
+            } else {
+              this.errorMessage =
+                data.message || "Invalid form data. Please check your inputs.";
+              this.showErrorPopup = true;
+            }
+          } else {
+            this.errorMessage = data.message || `Error: ${status}`;
+            this.showErrorPopup = true;
+          }
+        } else if (error.request) {
           this.errorMessage = "Network error! Please check your connection.";
+          this.showErrorPopup = true;
+        } else {
+          this.errorMessage = "An unexpected error occurred.";
+          this.showErrorPopup = true;
         }
-        this.showErrorPopup = true;
       }
     },
 
     handleFileUpload(event) {
       const files = event.target.files;
 
+      // Clear previous document errors
+      this.errors.documents = "";
+
       // Check if more than two files are selected
       if (files.length > 2) {
-        this.showErrorPopup = true;
-        this.errorMessage = "You can only upload two files at a time!";
-      } else {
-        // Ensure only image files are selected
-        const validFiles = Array.from(files).filter((file) =>
-          file.type.startsWith("image/")
-        );
+        this.errors.documents = "You can only upload two files at a time!";
+        return;
+      }
 
-        // Check if any non-image files are selected
-        if (validFiles.length !== files.length) {
-          this.showErrorPopup = true;
-          this.errorMessage = "Please select only image files!";
-        } else {
-          this.documents = validFiles;
+      // Ensure only image files are selected
+      const validFiles = Array.from(files).filter((file) =>
+        file.type.startsWith("image/")
+      );
+
+      // Check if any non-image files are selected
+      if (validFiles.length !== files.length) {
+        this.errors.documents = "Please select only image files!";
+      } else {
+        this.documents = validFiles;
+      }
+
+      // Check file sizes
+      const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit
+      for (const file of validFiles) {
+        if (file.size > MAX_FILE_SIZE) {
+          this.errors.documents = "File size must be less than 5MB";
+          break;
         }
       }
+    },
+
+    // Check if we can enable the signup button (all required fields are filled)
+    canSubmitSignup() {
+      if (this.formType !== "signup") return true;
+
+      const basicFields =
+        this.username &&
+        this.email &&
+        this.password &&
+        this.password.length >= 6;
+
+      if (this.role === "user") {
+        return basicFields;
+      } else {
+        return basicFields && this.serviceType && this.documents.length > 0;
+      }
+    },
+  },
+  watch: {
+    // Reset errors on input change
+    username() {
+      this.errors.username = "";
+    },
+    email() {
+      this.errors.email = "";
+    },
+    password() {
+      this.errors.password = "";
+    },
+    serviceType() {
+      this.errors.serviceType = "";
     },
   },
 };
 </script>
+
+<style scoped>
+/* Optional: Add transition animations */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Improve focus states for accessibility */
+input:focus,
+select:focus {
+  box-shadow: 0 0 0 3px rgba(106, 27, 154, 0.2);
+}
+
+/* Spinner for loading state */
+.spinner {
+  border: 3px solid rgba(106, 27, 154, 0.1);
+  border-radius: 50%;
+  border-top: 3px solid #6a1b9a;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+</style>

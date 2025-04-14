@@ -29,8 +29,6 @@ router.get("/services", async (req, res) => {
   }
 });
 
-// ... rest of your protected routes ...
-
 // Add a new service
 router.post("/services", async (req, res) => {
   const { _id } = req.user;

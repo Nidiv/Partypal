@@ -26,6 +26,28 @@ exports.verifyAdmin = async (req, res, next) => {
   }
 };
 
+exports.verifyUser = async (req, res, next) => {
+  try {
+    let token = req.header("Authorization");
+    console.log(token);
+    token = token.split(" ")[1];
+
+    if (!token) return res.status(401).json({ message: "Unauthorized access" });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.userId);
+    console.log(user);
+    if (!user || user.role !== "user") {
+      return res.status(403).json({ message: "Access denied. Admins only." });
+    }
+
+    req.user = user;
+    next();
+  } catch (error) {
+    res.status(401).json({ message: "Invalid token", error: error.message });
+  }
+};
+
 exports.verifyVendor = async (req, res, next) => {
   try {
     let token = req.header("Authorization");

@@ -10,6 +10,7 @@ import AdminHome from "../components/admin/AdminHome.vue";
 import VendorServices from "../components/vendor/VendorServices.vue"; // Vendor Services
 import MyBookings from "../components/MyBookings.vue";
 import ViewDetails from "../components/vendor/ViewDetails.vue"; // Vendor Services
+import VerifyPayment from "../components/VerifyPayment.vue"; //Verify Payment
 
 const routes = [
   { path: "/", redirect: "/auth" }, // Redirect to Auth page
@@ -17,6 +18,7 @@ const routes = [
   { path: "/home", name: "Home", component: Home },
   { path: "/vendorhome", name: "Vendorhome", component: Vendorhome },
   { path: "/viewdetails", name: "ViewDetails", component: ViewDetails },
+  { path: "/verifypayment", name: "VerifyPayment", component: VerifyPayment },
   {
     path: "/vendorservices",
     name: "VendorServices",

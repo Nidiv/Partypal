@@ -12,7 +12,7 @@ const bookingSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: false, // ⚠️ Temporary fix (set to `true` later)
+    required: true, // ⚠️ Temporary fix (set to `true` later)
   },
   guestCount: {
     type: Number,
@@ -45,7 +45,7 @@ const bookingSchema = new mongoose.Schema({
   },
   paymentStatus: {
     type: String,
-    enum: ["pending", "completed", "failed", "refunded"],
+    enum: ["pending", "completed", "failed"],
     default: "pending",
   },
   paymentId: {
@@ -66,6 +66,9 @@ const bookingSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  eventDate: {
+    type: Date,
   },
 });
 

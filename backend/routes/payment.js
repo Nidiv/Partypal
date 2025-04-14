@@ -5,6 +5,9 @@ const request = require("request");
 
 async function initiate(req, res) {
   try {
+    console.log("user:");
+    console.log(req.body.user);
+
     const {
       serviceId,
       packageId,
@@ -14,6 +17,7 @@ async function initiate(req, res) {
       paymentOption,
       amount,
       isFullPayment,
+      eventDate,
     } = req.body;
     const service = await Service.findById(serviceId);
 
@@ -24,6 +28,8 @@ async function initiate(req, res) {
     // Calculate the actual amount in paisa (Khalti requires amount in paisa)
     const amountInPaisa = amount * 100;
 
+    console.log("user:");
+    console.log(req.body.user);
     // Create a booking record first
     const newBooking = new Booking({
       service: serviceId,
@@ -36,6 +42,7 @@ async function initiate(req, res) {
       advanceAmount: amount,
       isFullPayment,
       paymentStatus: "pending",
+      eventDate: eventDate,
       user: req.user?._id, // If you have user authentication
     });
 
@@ -49,7 +56,7 @@ async function initiate(req, res) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        return_url: "http://localhost:3000/services",
+        return_url: "http://localhost:3000/verifypayment",
         website_url: "http://localhost:3000",
         amount: amountInPaisa,
         purchase_order_id: savedBooking._id, // Use booking ID as reference
