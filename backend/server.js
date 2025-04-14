@@ -6,7 +6,8 @@ const dotenv = require("dotenv");
 dotenv.config();
 const initiate = require("./routes/payment");
 const serviceRoutes = require("./routes/serviceRoutes");
-const { verifyVendor } = require("./middlewares/authMiddleware");
+const { verifyUser } = require("./middlewares/authMiddleware");
+const bookingRoutes = require("./routes/bookingRoutes");
 const app = express();
 
 // Configure CORS properly
@@ -27,7 +28,9 @@ app.use("/api/auth", userRoutes);
 
 app.use("/api", serviceRoutes);
 
-app.post("/payment/initiate", initiate);
+app.post("/payment/initiate", verifyUser, initiate);
+
+app.use("/booking", verifyUser, bookingRoutes);
 
 // Debug logs - using a more reliable method
 function printRoutes(router) {
