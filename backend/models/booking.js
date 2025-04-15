@@ -70,6 +70,21 @@ const bookingSchema = new mongoose.Schema({
   eventDate: {
     type: Date,
   },
+
+  // ✅ Feedback Section
+  feedback: {
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5,
+    },
+    text: {
+      type: String,
+    },
+    submittedAt: {
+      type: Date,
+    },
+  },
 });
 
 // Update timestamps

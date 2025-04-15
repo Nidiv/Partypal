@@ -20,6 +20,8 @@ const corsOptions = {
   optionsSuccessStatus: 200, // Some legacy browsers choke on 204
 };
 
+app.use("/uploads", express.static("uploads"));
+
 app.use(cors(corsOptions));
 
 // Middleware to parse JSON

@@ -76,7 +76,13 @@ export default {
     async approveVendor(id) {
       try {
         await axios.put(
-          `http://localhost:8081/api/auth/admin/approve-vendor/${id}`
+          `http://localhost:8081/api/auth/admin/approve-vendor/${id}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
         );
         this.vendors = this.vendors.filter((vendor) => vendor._id !== id); // Remove from list after approval
       } catch (error) {
