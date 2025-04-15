@@ -21,20 +21,23 @@
       </svg>
       Verifying your payment...
     </div>
-
     <div
       v-else-if="status === 'Completed'"
-      class="text-center bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded shadow-sm"
+      class="max-w-md mx-auto mt-10 text-center bg-green-50 border border-green-300 text-green-800 px-6 py-6 rounded-2xl shadow-md"
     >
-      <h2 class="text-2xl font-semibold mb-2">✅ Payment Successful!</h2>
-      <p class="text-base">
-        Your booking has been confirmed. Thank you for using PartyPal 🎉
+      <h2
+        class="text-2xl font-bold flex items-center justify-center gap-2 mb-3"
+      >
+        <span>✅</span> Payment Successful!
+      </h2>
+      <p class="text-base leading-relaxed">
+        Your booking has been confirmed. We’re thrilled to be part of your event
+        journey. Thank you for choosing <strong>PartyPal</strong> 🎉
       </p>
 
-      <!-- ✅ Add this button -->
       <router-link
         to="/my-bookings"
-        class="mt-4 inline-block bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
+        class="mt-6 inline-block bg-primary text-white font-medium px-6 py-2.5 rounded-lg hover:bg-primary-dark transition-all duration-200"
       >
         View My Bookings
       </router-link>

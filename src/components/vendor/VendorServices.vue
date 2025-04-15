@@ -86,6 +86,26 @@
               >
                 View Details
               </button>
+              <!-- Availability Toggle -->
+              <div
+                class="mt-4 flex items-center justify-between text-sm text-white"
+              >
+                <span>Available for Booking</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    :checked="service.status === 'active'"
+                    @change="() => toggleAvailability(service)"
+                    class="sr-only peer"
+                  />
+                  <div
+                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:bg-green-500 transition-all duration-300"
+                  ></div>
+                  <div
+                    class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-all peer-checked:translate-x-full"
+                  ></div>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -296,9 +316,11 @@ export default {
         this.loading = false;
       }
     },
+
     openServiceModal(service) {
       this.selectedService = service;
     },
+
     formatPriceUnit(unit) {
       const units = {
         per_person: "per person",
@@ -307,6 +329,26 @@ export default {
         per_day: "per day",
       };
       return units[unit] || unit.replace("_", " ");
+    },
+
+    // ✅ Add this
+    async toggleAvailability(service) {
+      try {
+        const newStatus = service.status === "active" ? "inactive" : "active";
+        await axios.put(
+          `http://localhost:8081/api/services/${service._id}/status`,
+          { status: newStatus },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+        service.status = newStatus;
+      } catch (err) {
+        console.error(err);
+        alert("Failed to update availability.");
+      }
     },
   },
 };

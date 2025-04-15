@@ -105,7 +105,9 @@
                     {{ formatDate(booking.feedback.submittedAt) }}
                   </p>
                 </div>
-                <span v-else class="italic text-gray-400">No feedback</span>
+                <span v-else class="italic text-gray-400"
+                  >No feedbacks yet</span
+                >
               </td>
             </tr>
           </tbody>
