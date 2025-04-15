@@ -7,7 +7,10 @@ const router = express.Router();
 // Public routes (no authentication needed)
 router.get("/all-services", async (req, res) => {
   try {
-    const services = await Service.find().populate("vendorId", "name email"); // Added populate
+    const services = await Service.find({ status: "active" }).populate(
+      "vendorId",
+      "name email"
+    ); //Fetching only active toggle button
     res.status(200).json(services);
   } catch (error) {
     console.error("Error fetching all services:", error);
@@ -114,6 +117,19 @@ router.get("/service-packages/:serviceId", async (req, res) => {
   } catch (error) {
     console.error("Error fetching service packages:", error);
     res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// PUT /api/services/:id/status
+router.put("/services/:id/status", async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    await Service.findByIdAndUpdate(id, { status });
+    res.status(200).json({ message: "Service status updated." });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to update status." });
   }
 });
 

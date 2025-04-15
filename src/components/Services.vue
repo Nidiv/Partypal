@@ -134,7 +134,6 @@
             <div class="flex justify-between items-start">
               <h3 class="text-lg font-semibold text-gray-800">
                 {{ service.title }}
-                <h1>{{ service.photos[0].url }}</h1>
               </h3>
               <span
                 class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full"
