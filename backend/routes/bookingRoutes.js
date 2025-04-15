@@ -57,4 +57,51 @@ router.get("/my-completed", async (req, res) => {
   }
 });
 
+// ✅ POST /booking/feedback/:bookingId
+router.post("/feedback/:bookingId", async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+    const { rating, text } = req.body;
+    const userId = req.user._id;
+
+    if (!rating || rating < 1 || rating > 5) {
+      return res
+        .status(400)
+        .json({ message: "Rating must be between 1 and 5" });
+    }
+
+    const booking = await Booking.findOne({
+      _id: bookingId,
+      user: userId,
+      paymentStatus: "completed",
+    });
+
+    if (!booking) {
+      return res
+        .status(404)
+        .json({ message: "Booking not found or not eligible for feedback" });
+    }
+
+    if (booking.feedback && booking.feedback.rating) {
+      return res.status(400).json({ message: "Feedback already submitted" });
+    }
+
+    booking.feedback = {
+      rating,
+      text,
+      submittedAt: new Date(),
+    };
+
+    await booking.save();
+
+    res.status(200).json({
+      message: "Feedback submitted successfully",
+      feedback: booking.feedback,
+    });
+  } catch (err) {
+    console.error("Error submitting feedback:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;

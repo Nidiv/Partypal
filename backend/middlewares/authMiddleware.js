@@ -7,13 +7,15 @@ dotenv.config();
 
 exports.verifyAdmin = async (req, res, next) => {
   try {
-    const token = req.header("Authorization");
-    console.log(token);
+    let token = req.header("Authorization");
+    token = token.spilt(" ")[1];
+    console.log("admin token: " + token);
 
     if (!token) return res.status(401).json({ message: "Unauthorized access" });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId);
+    console.log(user);
 
     if (!user || user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Admins only." });
@@ -29,7 +31,6 @@ exports.verifyAdmin = async (req, res, next) => {
 exports.verifyUser = async (req, res, next) => {
   try {
     let token = req.header("Authorization");
-    console.log(token);
     token = token.split(" ")[1];
 
     if (!token) return res.status(401).json({ message: "Unauthorized access" });

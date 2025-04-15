@@ -14,7 +14,7 @@
           :key="booking._id"
           class="bg-white rounded-lg shadow-md overflow-hidden"
         >
-          <!-- 📸 Service Image -->
+          <!-- Service Image -->
           <div class="h-48 w-full">
             <img
               :src="
@@ -28,7 +28,6 @@
           </div>
 
           <div class="p-6">
-            <!-- Booking Summary -->
             <div class="flex justify-between items-start">
               <div>
                 <h2 class="text-xl font-bold text-gray-800">
@@ -45,7 +44,7 @@
               </span>
             </div>
 
-            <!-- Event & Booking Details -->
+            <!-- Details -->
             <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <p class="text-sm text-gray-500">Booking ID</p>
@@ -116,7 +115,7 @@
               </div>
             </div>
 
-            <!-- Feedback -->
+            <!-- Existing Feedback -->
             <div v-if="booking.feedback" class="mt-6 border-t pt-4">
               <div class="flex items-center mb-2">
                 <div class="flex">
@@ -145,6 +144,53 @@
                 Submitted on {{ formatDate(booking.feedback.submittedAt) }}
               </p>
             </div>
+
+            <!-- New Feedback Form -->
+            <div
+              v-else-if="new Date(booking.eventDate) < new Date()"
+              class="mt-6 border-t pt-4"
+            >
+              <h3 class="text-md font-semibold text-gray-800 mb-2">
+                Leave Feedback
+              </h3>
+              <div class="flex items-center mb-2">
+                <label v-for="star in 5" :key="star" class="cursor-pointer">
+                  <input
+                    type="radio"
+                    :value="star"
+                    v-model="feedbackRatings[booking._id]"
+                    class="hidden"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    :class="
+                      star <= feedbackRatings[booking._id]
+                        ? 'text-yellow-400'
+                        : 'text-gray-300'
+                    "
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+                    />
+                  </svg>
+                </label>
+              </div>
+              <textarea
+                v-model="feedbackTexts[booking._id]"
+                rows="3"
+                class="w-full border rounded px-3 py-2 text-sm"
+                placeholder="Write your feedback here..."
+              ></textarea>
+              <button
+                @click="submitFeedback(booking)"
+                class="mt-2 bg-primary text-white px-4 py-2 rounded hover:bg-purple-700 text-sm"
+              >
+                Submit Feedback
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -161,6 +207,8 @@ export default {
     return {
       bookings: [],
       loading: true,
+      feedbackRatings: {},
+      feedbackTexts: {},
     };
   },
   methods: {
@@ -190,6 +238,29 @@ export default {
         console.error("Failed to fetch bookings:", err);
       } finally {
         this.loading = false;
+      }
+    },
+    async submitFeedback(booking) {
+      try {
+        const rating = this.feedbackRatings[booking._id];
+        const text = this.feedbackTexts[booking._id];
+        if (!rating || !text) {
+          alert("Please provide both a rating and a comment.");
+          return;
+        }
+        await axios.post(
+          `http://localhost:8081/booking/feedback/${booking._id}`,
+          { rating, text },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+        alert("Feedback submitted!");
+        this.fetchBookings(); // Refresh list to show feedback
+      } catch (err) {
+        console.error("Failed to submit feedback:", err);
       }
     },
   },

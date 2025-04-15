@@ -31,9 +31,9 @@ router.get("/vendor-bookings", async (req, res) => {
       })
       .limit(20)
       .sort({ createdAt: -1 })
-      .lean(); // 🧠 Critical: Don't hydrate full Mongoose docs
+      .lean();
 
-    // Optional: Strip down extra junk if needed (defensive)
+    // Include feedback in the response
     const response = bookings.map((b) => ({
       _id: b._id,
       createdAt: b.createdAt,
@@ -44,6 +44,7 @@ router.get("/vendor-bookings", async (req, res) => {
       user: b.user || {},
       service: b.service || {},
       package: b.package || {},
+      feedback: b.feedback || null, // ✅ include feedback object if present
     }));
 
     res.status(200).json(response);

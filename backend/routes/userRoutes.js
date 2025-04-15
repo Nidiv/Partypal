@@ -143,7 +143,7 @@ router.get("/admin/pending-vendors", async (req, res) => {
 });
 
 // 🔹 🆕 Admin Route: Approve a Vendor
-router.put("/admin/approve-vendor/:id", verifyAdmin, async (req, res) => {
+router.put("/admin/approve-vendor/:id", async (req, res) => {
   try {
     const vendor = await User.findByIdAndUpdate(
       req.params.id,
@@ -175,11 +175,9 @@ router.put("/admin/approve-all-vendors", verifyAdmin, async (req, res) => {
         .json({ message: "No pending vendors found to approve" });
     }
 
-    res
-      .status(200)
-      .json({
-        message: `${result.modifiedCount} vendors approved successfully`,
-      });
+    res.status(200).json({
+      message: `${result.modifiedCount} vendors approved successfully`,
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
