@@ -29,7 +29,6 @@ router.get("/vendor-bookings", async (req, res) => {
         select: "name price",
         options: { lean: true },
       })
-      .limit(20)
       .sort({ createdAt: -1 })
       .lean();
 

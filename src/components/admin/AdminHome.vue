@@ -1,7 +1,15 @@
 <template>
   <div class="min-h-screen bg-gray-100 p-6">
     <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
-      <h2 class="text-2xl font-bold mb-4">Vendor Approvals</h2>
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold">Vendor Approvals</h2>
+        <button
+          @click="logout"
+          class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"
+        >
+          Logout
+        </button>
+      </div>
 
       <div v-if="loading" class="text-center text-gray-600">Loading...</div>
       <div v-else-if="vendors.length === 0" class="text-center text-gray-600">
@@ -35,18 +43,25 @@
               </div>
             </div>
           </div>
-          <button
-            @click="approveVendor(vendor._id)"
-            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
-          >
-            Approve
-          </button>
+          <div class="flex gap-2">
+            <button
+              @click="approveVendor(vendor._id)"
+              class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
+            >
+              Approve
+            </button>
+            <button
+              @click="deleteVendor(vendor._id)"
+              class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 <script>
 import axios from "axios";
 
@@ -84,10 +99,29 @@ export default {
             },
           }
         );
-        this.vendors = this.vendors.filter((vendor) => vendor._id !== id); // Remove from list after approval
+        this.vendors = this.vendors.filter((vendor) => vendor._id !== id);
       } catch (error) {
         console.error("Error approving vendor:", error);
       }
+    },
+    async deleteVendor(id) {
+      try {
+        await axios.delete(
+          `http://localhost:8081/api/auth/admin/delete-vendor/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+        this.vendors = this.vendors.filter((vendor) => vendor._id !== id);
+      } catch (error) {
+        console.error("Error deleting vendor:", error);
+      }
+    },
+    logout() {
+      localStorage.removeItem("authToken");
+      this.$router.push("/auth");
     },
   },
 };
