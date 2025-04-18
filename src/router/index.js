@@ -1,54 +1,118 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Auth from "../components/Auth.vue"; // Login & Signup Page
-import Home from "../components/Home.vue"; // Home Page
-import Vendorhome from "../components/vendor/Vendorhome.vue"; // Vendor Dashboard
-import AboutUs from "../components/AboutUs.vue"; // About Us Page
-import ServicePage from "../components/Services.vue"; // Services Page
-import ContactUsPage from "../components/ContactUs.vue"; // Contact Us Page
-import NotFound from "../components/NotFound.vue"; // 404 Page (Not Found)
+
+import Auth from "../components/Auth.vue";
+import Home from "../components/Home.vue";
+import Vendorhome from "../components/vendor/Vendorhome.vue";
+import AboutUs from "../components/AboutUs.vue";
+import ServicePage from "../components/Services.vue";
+import ContactUsPage from "../components/ContactUs.vue";
+import NotFound from "../components/NotFound.vue";
 import AdminHome from "../components/admin/AdminHome.vue";
-import VendorServices from "../components/vendor/VendorServices.vue"; // Vendor Services
+import VendorServices from "../components/vendor/VendorServices.vue";
 import MyBookings from "../components/MyBookings.vue";
-import ViewDetails from "../components/vendor/ViewDetails.vue"; // Vendor Services
-import VerifyPayment from "../components/VerifyPayment.vue"; //Verify Payment
-import BookingHistory from "../components/vendor/BookingHistory.vue"; //User Booking
+import ViewDetails from "../components/vendor/ViewDetails.vue";
+import VerifyPayment from "../components/VerifyPayment.vue";
+import BookingHistory from "../components/vendor/BookingHistory.vue";
 
 const routes = [
-  { path: "/", redirect: "/auth" }, // Redirect to Auth page
+  { path: "/", redirect: "/auth" },
   { path: "/auth", name: "Auth", component: Auth },
-  { path: "/home", name: "Home", component: Home },
-  { path: "/vendorhome", name: "Vendorhome", component: Vendorhome },
-  { path: "/viewdetails", name: "ViewDetails", component: ViewDetails },
-  { path: "/verifypayment", name: "VerifyPayment", component: VerifyPayment },
+
+  // User-only routes (allowed only when role is null or "user")
   {
-    path: "/vendorservices",
-    name: "VendorServices",
-    component: VendorServices,
+    path: "/home",
+    name: "Home",
+    component: Home,
+    meta: { allowedRoles: ["user"] },
   },
   {
-    path: "/bookinghistory",
-    name: "BookingHistory",
-    component: BookingHistory,
+    path: "/aboutus",
+    name: "AboutUs",
+    component: AboutUs,
+    meta: { allowedRoles: ["user"] },
   },
-  { path: "/aboutus", name: "AboutUs", component: AboutUs },
-  { path: "/services", name: "Services", component: ServicePage },
-  { path: "/contactus", name: "ContactUs", component: ContactUsPage },
-  { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound }, // ✅ Catch-all route for invalid URLs
   {
-    path: "/adminhome",
-    name: "AdminHome",
-    component: AdminHome,
+    path: "/services",
+    name: "Services",
+    component: ServicePage,
+    meta: { allowedRoles: ["user"] },
+  },
+  {
+    path: "/contactus",
+    name: "ContactUs",
+    component: ContactUsPage,
+    meta: { allowedRoles: ["user"] },
   },
   {
     path: "/my-bookings",
     name: "MyBookings",
     component: MyBookings,
+    meta: { allowedRoles: ["user"] },
   },
+  {
+    path: "/verifypayment",
+    name: "VerifyPayment",
+    component: VerifyPayment,
+    meta: { allowedRoles: ["user"] },
+  },
+
+  // Vendor-only routes
+  {
+    path: "/vendorhome",
+    name: "Vendorhome",
+    component: Vendorhome,
+    meta: { allowedRoles: ["vendor"] },
+  },
+  {
+    path: "/vendorservices",
+    name: "VendorServices",
+    component: VendorServices,
+    meta: { allowedRoles: ["vendor"] },
+  },
+  {
+    path: "/viewdetails",
+    name: "ViewDetails",
+    component: ViewDetails,
+    meta: { allowedRoles: ["vendor"] },
+  },
+  {
+    path: "/bookinghistory",
+    name: "BookingHistory",
+    component: BookingHistory,
+    meta: { allowedRoles: ["vendor"] },
+  },
+
+  // Admin-only route
+  {
+    path: "/adminhome",
+    name: "AdminHome",
+    component: AdminHome,
+    meta: { allowedRoles: ["admin"] },
+  },
+
+  // Catch-all route
+  { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  let role = localStorage.getItem("userRole");
+  if (!role) role = "user"; // Treat null as normal user
+
+  const allowed = to.meta.allowedRoles;
+
+  if (allowed && !allowed.includes(role)) {
+    // Redirect based on actual role
+    if (role === "vendor") return next("/vendorhome");
+    if (role === "admin") return next("/adminhome");
+    return next("/auth");
+  }
+
+  next();
 });
 
 export default router;

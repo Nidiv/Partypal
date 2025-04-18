@@ -316,11 +316,9 @@ export default {
         this.loading = false;
       }
     },
-
     openServiceModal(service) {
       this.selectedService = service;
     },
-
     formatPriceUnit(unit) {
       const units = {
         per_person: "per person",

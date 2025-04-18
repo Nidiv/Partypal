@@ -78,6 +78,22 @@
                   Rs. {{ formatNumber(booking.advanceAmount) }}
                 </p>
               </div>
+              <!-- Amount Left to Pay -->
+              <div v-if="booking.paymentStatus === 'partial'">
+                <p class="text-sm text-gray-500">Amount Left</p>
+                <p class="font-medium text-red-600">
+                  Rs.
+                  {{
+                    formatNumber(booking.totalAmount - booking.advanceAmount)
+                  }}
+                </p>
+                <button
+                  @click="payRemainingAmount(booking)"
+                  class="mt-2 bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 text-sm"
+                >
+                  Pay Now
+                </button>
+              </div>
             </div>
 
             <!-- Service Info -->
@@ -238,6 +254,82 @@ export default {
         console.error("Failed to fetch bookings:", err);
       } finally {
         this.loading = false;
+      }
+    },
+    async payRemainingAmount(booking) {
+      const amountLeft = booking.totalAmount - booking.advanceAmount;
+
+      try {
+        this.paymentLoading = true;
+        const authToken = localStorage.getItem("authToken");
+
+        if (!authToken) {
+          this.$router.push("/auth");
+          return;
+        }
+
+        let userId;
+        try {
+          const payload = JSON.parse(atob(authToken.split(".")[1]));
+          userId = payload.userId || payload.sub || payload._id || payload.id;
+        } catch (e) {
+          // fallback to API call if token can't be decoded
+        }
+
+        if (!userId) {
+          try {
+            const userResponse = await axios.get(
+              "http://localhost:8081/api/auth/me",
+              {
+                headers: {
+                  Authorization: `Bearer ${authToken}`,
+                },
+              }
+            );
+            userId = userResponse.data._id;
+          } catch (error) {
+            console.error("User info error:", error);
+            this.$router.push("/auth");
+            return;
+          }
+        }
+
+        const paymentData = {
+          bookingId: booking._id,
+          user: userId,
+          amount: amountLeft,
+          paymentOption: "partial",
+          isFullPayment: false,
+        };
+
+        const baseURL = window.location.origin.includes("localhost")
+          ? "http://localhost:8081"
+          : "";
+
+        const response = await axios.post(
+          `${baseURL}/payment/remaining`,
+          paymentData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+
+        if (response.data.payment_url) {
+          window.location.href = response.data.payment_url;
+        } else {
+          throw new Error("No payment URL received");
+        }
+      } catch (error) {
+        console.error("Error in partial payment:", error);
+        alert(
+          error.response?.data?.message ||
+            "Failed to initiate payment. Try again."
+        );
+      } finally {
+        this.paymentLoading = false;
       }
     },
     async submitFeedback(booking) {
