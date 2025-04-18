@@ -766,6 +766,10 @@ export default {
         // 🔹 Ensure user data exists before accessing role
         const userRole = response.data.user?.role || "user";
         localStorage.setItem("userRole", userRole);
+        localStorage.setItem(
+          "loggedInUser",
+          JSON.stringify(response.data.user)
+        ); // ✅ Store full user
 
         // 🔹 Redirect based on role
         this.$router.push(

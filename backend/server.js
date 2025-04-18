@@ -9,7 +9,7 @@ const serviceRoutes = require("./routes/serviceRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const { verifyUser } = require("./middlewares/authMiddleware");
 const { verifyVendor } = require("./middlewares/authMiddleware");
-
+const chatRoutes = require("./routes/chatRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 const vendorRoutes = require("./routes/vendorRoutes");
 const app = express();
@@ -20,13 +20,15 @@ const corsOptions = {
   credentials: true, // Allow credentials
   optionsSuccessStatus: 200, // Some legacy browsers choke on 204
 };
-
-app.use("/uploads", express.static("uploads"));
-
+// CORS first – before any routes
 app.use(cors(corsOptions));
-
 // Middleware to parse JSON
 app.use(express.json({ limit: "10mb" }));
+
+//Chat Feature
+app.use("/api/chat", chatRoutes);
+
+app.use("/uploads", express.static("uploads"));
 
 app.use("/api/auth", adminRoutes);
 // Use the routes

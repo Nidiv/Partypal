@@ -28,11 +28,10 @@
         User Bookings
       </router-link>
       <router-link
-        to="/messages"
+        :to="`/chat?userId=${vendor._id}`"
         class="text-white hover:text-[#9c4f96] transition block"
+        >Messages</router-link
       >
-        Messages
-      </router-link>
       <router-link
         to="/profile"
         class="text-white hover:text-[#9c4f96] transition block"
@@ -51,10 +50,17 @@
 
 <script>
 export default {
+  computed: {
+    vendor() {
+      const stored = localStorage.getItem("loggedInUser");
+      return stored ? JSON.parse(stored) : null;
+    },
+  },
   methods: {
     logout() {
-      localStorage.removeItem("authToken"); // Remove auth token
-      this.$router.push("/auth"); // Redirect to Auth page
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("loggedInUser"); // Optional cleanup
+      this.$router.push("/auth");
     },
   },
 };
