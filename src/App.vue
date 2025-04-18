@@ -25,6 +25,7 @@ export default {
         "AdminHome",
         "VendorServices",
         "ViewDetails",
+        "Chat",
       ];
       return hiddenRoutes.includes(this.$route.name); // ✅ Use `this.$route.name`
     },

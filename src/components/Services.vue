@@ -151,6 +151,27 @@
               {{ formatPriceUnit(service.priceUnit) }}
             </p>
 
+            <router-link
+              :to="`/chat?vendorId=${service.vendorId._id}`"
+              class="mt-2 inline-flex items-center gap-1 text-sm text-primary hover:underline"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M7 8h10M7 12h6m-6 4h4"
+                />
+              </svg>
+              Chat
+            </router-link>
+
             <!-- View details Button -->
             <div class="mt-4 flex flex-wrap gap-2">
               <button
