@@ -161,24 +161,6 @@ router.put("/admin/approve-vendor/:id", async (req, res) => {
   }
 });
 
-// DELETE Vendor by ID
-router.delete("/admin/delete-vendor/:id", async (req, res) => {
-  try {
-    const vendorId = req.params.id;
-
-    const deletedVendor = await User.findByIdAndDelete(vendorId);
-
-    if (!deletedVendor) {
-      return res.status(404).json({ message: "Vendor not found" });
-    }
-
-    res.status(200).json({ message: "Vendor deleted successfully" });
-  } catch (error) {
-    console.error("Error deleting vendor:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-});
-
 // 🔹 🆕 Admin Route: Approve All Pending Vendors at Once
 router.put("/admin/approve-all-vendors", verifyAdmin, async (req, res) => {
   try {

@@ -101,7 +101,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   let role = localStorage.getItem("userRole");
-  if (!role) role = "user"; // Treat null as normal user
+  if (!role) role = "user";
 
   const allowed = to.meta.allowedRoles;
 
