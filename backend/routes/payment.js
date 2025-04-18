@@ -2,6 +2,7 @@ const Service = require("../models/service");
 const Booking = require("../models/booking"); // You'll need to create this model
 const express = require("express");
 const request = require("request");
+const { sendBookingConfirmation } = require("../utils/email"); //import this
 
 async function initiate(req, res) {
   try {
@@ -68,27 +69,41 @@ async function initiate(req, res) {
       }),
     };
 
-    request(options, function (error, response) {
-      if (error) {
-        console.error("Payment initiation error:", error);
-        return res
-          .status(500)
-          .json({ message: "Payment initiation failed", error: error.message });
-      }
-
-      const paymentResponse = JSON.parse(response.body);
-      console.log("Payment response:", paymentResponse);
-
-      // Update booking with payment ID
-      Booking.findByIdAndUpdate(savedBooking._id, {
-        paymentId: paymentResponse.pidx,
-        paymentUrl: paymentResponse.payment_url,
-      }).exec();
-
-      res.status(200).json({
-        ...paymentResponse,
-        bookingId: savedBooking._id,
+    // Wrap `request` in a Promise so we can await it
+    const paymentResponse = await new Promise((resolve, reject) => {
+      request(options, (error, response) => {
+        if (error) {
+          return reject(error);
+        }
+        try {
+          const body = JSON.parse(response.body);
+          resolve(body);
+        } catch (err) {
+          reject(err);
+        }
       });
+    });
+
+    // Update booking
+    await Booking.findByIdAndUpdate(savedBooking._id, {
+      paymentId: paymentResponse.pidx,
+      paymentUrl: paymentResponse.payment_url,
+    });
+
+    // Send email
+    await sendBookingConfirmation(
+      req.user?.email || "nidiv04@gmail.com",
+      req.user?.username || "static",
+      {
+        serviceTitle: service.title,
+        eventDate: eventDate,
+      }
+    );
+
+    // Send response back
+    res.status(200).json({
+      ...paymentResponse,
+      bookingId: savedBooking._id,
     });
   } catch (error) {
     console.error("Payment processing error:", error);

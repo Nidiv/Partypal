@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const initiate = require("./routes/payment");
 const serviceRoutes = require("./routes/serviceRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 const { verifyUser } = require("./middlewares/authMiddleware");
 const { verifyVendor } = require("./middlewares/authMiddleware");
 
@@ -27,6 +28,7 @@ app.use(cors(corsOptions));
 // Middleware to parse JSON
 app.use(express.json({ limit: "10mb" }));
 
+app.use("/api/auth", adminRoutes);
 // Use the routes
 app.use("/api/auth", userRoutes);
 // console.log("User routes mounted at /api/auth");
