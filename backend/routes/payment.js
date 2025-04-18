@@ -96,7 +96,9 @@ async function initiate(req, res) {
       req.user?.username || "static",
       {
         serviceTitle: service.title,
-        eventDate: eventDate,
+        eventDate,
+        totalAmount: amount,
+        paymentOption,
       }
     );
 
