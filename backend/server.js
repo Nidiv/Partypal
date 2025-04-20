@@ -11,6 +11,7 @@ const { verifyUser } = require("./middlewares/authMiddleware");
 const { verifyVendor } = require("./middlewares/authMiddleware");
 const chatRoutes = require("./routes/chatRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
+const contactRoutes = require("./routes/contactUs");
 const vendorRoutes = require("./routes/vendorRoutes");
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(express.json({ limit: "10mb" }));
 //Chat Feature
 app.use("/api/chat", chatRoutes);
 
+app.use("/api/contact", contactRoutes);
 app.use("/uploads", express.static("uploads"));
 
 app.use("/api/auth", adminRoutes);

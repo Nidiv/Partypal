@@ -85,6 +85,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import "boxicons/css/boxicons.min.css";
 export default {
   data() {
@@ -98,9 +99,21 @@ export default {
     };
   },
   methods: {
-    submitForm() {
-      console.log("Form submitted:", this.form);
-      alert("Your message has been sent!");
+    async submitForm() {
+      try {
+        const response = await axios.post(
+          "http://localhost:8081/api/contact/submit",
+          this.form
+        );
+        alert("Your message has been sent!");
+        console.log("Backend response:", response.data);
+
+        // Clear form
+        this.form = { name: "", email: "", subject: "", message: "" };
+      } catch (error) {
+        console.error("Form error:", error);
+        alert("Something went wrong. Please try again.");
+      }
     },
   },
 };
