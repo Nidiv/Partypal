@@ -42,7 +42,6 @@
         View My Bookings
       </router-link>
     </div>
-
     <div
       v-else
       class="text-center bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded shadow-sm"
@@ -51,6 +50,14 @@
       <p class="text-base">
         Your payment could not be verified or was cancelled. Please try again.
       </p>
+
+      <!-- Button to redirect to services -->
+      <router-link
+        to="/services"
+        class="mt-6 inline-block bg-primary text-white font-medium px-6 py-2.5 rounded-lg hover:bg-primary-dark transition-all duration-200"
+      >
+        Book Again
+      </router-link>
     </div>
   </div>
 </template>
