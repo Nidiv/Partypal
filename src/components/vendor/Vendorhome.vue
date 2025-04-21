@@ -638,15 +638,8 @@
 
         <!-- Form Controls -->
         <div
-          class="mt-8 flex justify-between items-center border-t border-[#bdc3c7] pt-6"
+          class="mt-8 flex justify-end items-center border-t border-[#bdc3c7] pt-6"
         >
-          <button
-            @click="saveAsDraft"
-            class="px-6 py-2 bg-transparent border border-[#9c4f96] text-[#9c4f96] rounded-md hover:bg-[#4e0072] hover:text-white transition"
-          >
-            Save as Draft
-          </button>
-
           <div class="flex space-x-4">
             <button
               @click="prevTab"
