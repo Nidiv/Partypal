@@ -5,7 +5,7 @@
 
     <!-- Main Content -->
     <div class="p-6 font-zen text-gray-800 w-full">
-      <h1 class="text-2xl font-bold mb-4 text-primary">Vendor Bookings</h1>
+      <h1 class="text-2xl font-bold mb-4 text-primary">User Bookings</h1>
 
       <!-- Loading State -->
       <div v-if="loading" class="text-center text-gray-500">

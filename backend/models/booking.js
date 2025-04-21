@@ -12,7 +12,7 @@ const bookingSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true, // ⚠️ Temporary fix (set to `true` later)
+    required: true,
   },
   guestCount: {
     type: Number,
@@ -49,7 +49,7 @@ const bookingSchema = new mongoose.Schema({
     default: "pending",
   },
   paymentId: {
-    type: String, // Khalti pidx
+    type: String,
   },
   paymentUrl: {
     type: String,

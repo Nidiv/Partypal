@@ -175,11 +175,13 @@
         We'd love to hear from you and discuss your upcoming plans. Feel free to
         share your thoughts with us!
       </p>
-      <button
-        class="mt-6 bg-primary text-white px-6 py-3 rounded hover:bg-purple-800"
-      >
-        Get in Touch
-      </button>
+      <router-link to="/contactus">
+        <button
+          class="mt-6 bg-primary text-white px-6 py-3 rounded hover:bg-purple-800"
+        >
+          Get in Touch
+        </button>
+      </router-link>
     </section>
   </div>
 </template>
