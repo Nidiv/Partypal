@@ -38,6 +38,18 @@
             ></span>
           </router-link>
         </li>
+        <li v-if="user">
+          <router-link
+            :to="`/chat?userId=${user._id}`"
+            class="relative py-1 font-medium group"
+          >
+            Messages
+            <span
+              class="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"
+            ></span>
+          </router-link>
+        </li>
+
         <li>
           <router-link to="/contactus" class="relative py-1 font-medium group">
             Contact Us
@@ -73,9 +85,16 @@
 
 <script>
 export default {
+  computed: {
+    user() {
+      const storedUser = localStorage.getItem("loggedInUser");
+      return storedUser ? JSON.parse(storedUser) : null;
+    },
+  },
   methods: {
     logout() {
       localStorage.removeItem("authToken");
+      localStorage.removeItem("loggedInUser");
       this.$router.push("/auth");
     },
   },

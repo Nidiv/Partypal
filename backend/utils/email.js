@@ -47,7 +47,35 @@ const sendBookingConfirmation = async (toEmail, userName, booking) => {
 
   return transporter.sendMail(mailOptions);
 };
+const sendVendorNotification = async (toEmail, vendorName, booking) => {
+  const mailOptions = {
+    from: '"PartyPal 🎉" <no-reply@partypal.com>',
+    to: toEmail,
+    subject: "📢 New Booking Received – PartyPal Vendor Alert",
+    html: `
+      <div style="font-family: Arial, sans-serif; color: #333;">
+        <h2 style="color: #6a1b9a;">Hello ${vendorName},</h2>
 
+        <p>
+          You’ve received a new booking for your service <strong>${
+            booking.serviceTitle
+          }</strong> on <strong>PartyPal</strong>!
+        </p>
+
+        <p>
+          <strong>📅 Event Date:</strong> ${booking.eventDate}<br/>
+          <strong>👤 Customer Name:</strong> ${booking.customerName}<br/>
+          <strong>💳 Payment Type:</strong> ${
+            booking.paymentOption === "full"
+              ? "Full Payment"
+              : "Partial Payment"
+          }<br/>
+          <strong>💰 Total Amount:</strong> Rs. ${booking.totalAmount.toLocaleString()}
+        </p>
+
+        <p>
+          Please check your user bookings for more details and chat with the user if needed.
+        </p>
 const sendVendorNotification = async (toEmail, booking) => {
   const mailOptions = {
     from: '"PartyPal 🎉" <no-reply@partypal.com>',

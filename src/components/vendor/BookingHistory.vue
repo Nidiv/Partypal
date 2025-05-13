@@ -5,7 +5,7 @@
 
     <!-- Main Content -->
     <div class="p-6 font-zen text-gray-800 w-full">
-      <h1 class="text-2xl font-bold mb-4 text-primary">Vendor Bookings</h1>
+      <h1 class="text-2xl font-bold mb-4 text-primary">User Bookings</h1>
 
       <!-- Loading State -->
       <div v-if="loading" class="text-center text-gray-500">
@@ -108,6 +108,30 @@
                 <span v-else class="italic text-gray-400"
                   >No feedbacks yet</span
                 >
+              </td>
+              <!-- chat -->
+              <td class="px-4 py-3 text-center">
+                <router-link
+                  v-if="booking.user?._id"
+                  :to="`/chat?userId=${booking.user._id}`"
+                  class="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M7 8h10M7 12h6m-6 4h4"
+                    />
+                  </svg>
+                  Chat
+                </router-link>
               </td>
             </tr>
           </tbody>

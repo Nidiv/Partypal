@@ -13,6 +13,7 @@ import MyBookings from "../components/MyBookings.vue";
 import ViewDetails from "../components/vendor/ViewDetails.vue";
 import VerifyPayment from "../components/VerifyPayment.vue";
 import BookingHistory from "../components/vendor/BookingHistory.vue";
+import Chat from "../views/Chat.vue";
 
 const routes = [
   { path: "/", redirect: "/auth" },
@@ -88,6 +89,12 @@ const routes = [
     name: "AdminHome",
     component: AdminHome,
     meta: { allowedRoles: ["admin"] },
+  },
+  {
+    path: "/chat",
+    name: "Chat",
+    component: Chat,
+    meta: { allowedRoles: ["user", "vendor"] },
   },
 
   // Catch-all route
