@@ -31,12 +31,14 @@
         v-for="(msg, i) in messages"
         :key="i"
         class="mb-2 flex"
-        :class="msg.senderId === senderId ? 'justify-end' : 'justify-start'"
+        :class="
+          msg.senderId?._id === senderId ? 'justify-end' : 'justify-start'
+        "
       >
         <div
           :class="[
             'px-3 py-2 rounded-lg max-w-xs break-words text-sm',
-            msg.senderId === senderId
+            msg.senderId?._id === senderId
               ? 'bg-blue-100 text-blue-800'
               : 'bg-purple-100 text-purple-800',
           ]"
@@ -68,7 +70,7 @@ export default {
       userId: "",
       userRole: "",
       vendorId: "",
-      senderId: "", // new
+      senderId: "", // _id of logged in user (vendor or user)
       receiverId: "",
     };
   },
@@ -155,3 +157,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.text-primary {
+  color: #8b5cf6;
+}
+.font-zen {
+  font-family: "Zen Kaku Gothic New", sans-serif;
+}
+</style>
