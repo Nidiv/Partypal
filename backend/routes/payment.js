@@ -88,7 +88,7 @@ async function initiate(req, res) {
 
     // ✅ Send email to user
     await sendBookingConfirmation(
-      req.user?.email || "nidiv04@gmail.com",
+      req.user?.email || "partypal.co@gmail.com",
       req.user?.username || "static",
       {
         serviceTitle: service.title,

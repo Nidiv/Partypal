@@ -38,7 +38,7 @@ router.post("/submit", async (req, res) => {
 
     // Confirmation email to user
     await transporter.sendMail({
-      from: `"PartyPal Support" <${process.env.EMAIL_USER}>`,
+      from: `"PartyPal Customer Support" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Thanks for contacting PartyPal!",
       html: `
