@@ -28,7 +28,7 @@
         User Bookings
       </router-link>
       <router-link
-        :to="`/chat?userId=${vendor._id}`"
+        :to="`/Messages`"
         class="text-white hover:text-[#9c4f96] transition block"
         >Messages</router-link
       >

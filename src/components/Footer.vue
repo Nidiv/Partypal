@@ -181,7 +181,7 @@
                     d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                   ></path>
                 </svg>
-                <span class="text-gray-300">123 Event Avenue, Party City</span>
+                <span class="text-gray-300">Lalitpur, Nepal</span>
               </li>
               <li class="flex items-start">
                 <svg
