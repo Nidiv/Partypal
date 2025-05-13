@@ -13,7 +13,11 @@ import MyBookings from "../components/MyBookings.vue";
 import ViewDetails from "../components/vendor/ViewDetails.vue";
 import VerifyPayment from "../components/VerifyPayment.vue";
 import BookingHistory from "../components/vendor/BookingHistory.vue";
+<<<<<<< HEAD
 import Chat from "../views/Chat.vue";
+=======
+import VendorDashboard from "../components/vendor/Dashboard.vue";
+>>>>>>> 92a9aa6 (Dashboard added)
 
 const routes = [
   { path: "/", redirect: "/auth" },
@@ -80,6 +84,12 @@ const routes = [
     path: "/bookinghistory",
     name: "BookingHistory",
     component: BookingHistory,
+    meta: { allowedRoles: ["vendor"] },
+  },
+  {
+    path: "/vendordashboard",
+    name: "VendorDashboard",
+    component: VendorDashboard,
     meta: { allowedRoles: ["vendor"] },
   },
 

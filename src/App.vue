@@ -25,8 +25,13 @@ export default {
         "AdminHome",
         "VendorServices",
         "ViewDetails",
+<<<<<<< HEAD
         "Chat",
         "BookingHistory",
+=======
+        "BookingHistory",
+        "VendorDashboard",
+>>>>>>> 92a9aa6 (Dashboard added)
       ];
       return hiddenRoutes.includes(this.$route.name); // ✅ Use `this.$route.name`
     },
