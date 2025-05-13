@@ -10,7 +10,7 @@
 
       <div class="grid gap-6">
         <div
-          v-for="booking in bookings"
+          v-for="booking in sortedBookings"
           :key="booking._id"
           class="bg-white rounded-lg shadow-md overflow-hidden"
         >
@@ -226,6 +226,14 @@ export default {
       feedbackRatings: {},
       feedbackTexts: {},
     };
+  },
+  computed: {
+    sortedBookings() {
+      // Sort bookings by createdAt date in descending order (newest first)
+      return [...this.bookings].sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+    },
   },
   methods: {
     formatNumber(num) {

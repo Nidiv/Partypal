@@ -36,7 +36,7 @@
           <i class="bx bx-envelope text-blue-500 text-2xl mt-1"></i>
           <div>
             <h3 class="text-lg font-semibold text-blue-500">Email</h3>
-            <p class="text-black">partypal@gmail.com</p>
+            <p class="text-black">partypal.co@gmail.com</p>
           </div>
         </div>
       </div>
