@@ -10,7 +10,7 @@
 
     <nav class="flex flex-col space-y-4">
       <router-link
-        to="/dashboard"
+        to="/vendordashboard"
         class="text-white hover:text-[#9c4f96] transition block"
       >
         Dashboard
@@ -36,8 +36,8 @@
         to="/profile"
         class="text-white hover:text-[#9c4f96] transition block"
       >
-        Profile </router-link
-      >us
+        Profile
+      </router-link>
       <button
         @click="logout"
         class="text-white hover:text-[#9c4f96] transition block text-left w-full"
