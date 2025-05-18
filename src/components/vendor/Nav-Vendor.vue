@@ -32,12 +32,6 @@
         class="text-white hover:text-[#9c4f96] transition block"
         >Messages</router-link
       >
-      <router-link
-        to="/profile"
-        class="text-white hover:text-[#9c4f96] transition block"
-      >
-        Profile
-      </router-link>
       <button
         @click="logout"
         class="text-white hover:text-[#9c4f96] transition block text-left w-full"
