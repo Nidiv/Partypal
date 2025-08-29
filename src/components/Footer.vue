@@ -65,44 +65,36 @@
             </h3>
             <ul class="space-y-2">
               <li>
-                <router-link
-                  to="/services/corporate"
+                <a
+                  href="#"
                   class="text-gray-300 hover:text-white transition-colors"
                 >
                   Corporate Events
-                </router-link>
+                </a>
               </li>
               <li>
-                <router-link
-                  to="/services/weddings"
+                <a
+                  href="#"
                   class="text-gray-300 hover:text-white transition-colors"
                 >
                   Weddings
-                </router-link>
+                </a>
               </li>
               <li>
-                <router-link
-                  to="/services/birthdays"
-                  class="text-gray-300 hover:text-white transition-colors"
-                >
-                  Birthday Parties
-                </router-link>
-              </li>
-              <li>
-                <router-link
-                  to="/services/social"
+                <a
+                  href="#"
                   class="text-gray-300 hover:text-white transition-colors"
                 >
                   Social Gatherings
-                </router-link>
+                </a>
               </li>
               <li>
-                <router-link
-                  to="/services/custom"
+                <a
+                  href="#"
                   class="text-gray-300 hover:text-white transition-colors"
                 >
                   Custom Events
-                </router-link>
+                </a>
               </li>
             </ul>
           </div>

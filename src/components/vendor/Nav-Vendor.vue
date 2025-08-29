@@ -1,6 +1,6 @@
 <template>
   <aside class="w-64 min-h-screen bg-[#4e0072] p-6 shadow-md">
-    <!-- PartyPal Logo (Clickable) -->
+    <!-- PartyPal Logo -->
     <router-link
       to="/vendorhome"
       class="text-2xl font-bold text-white mb-6 block hover:text-[#9c4f96] transition"

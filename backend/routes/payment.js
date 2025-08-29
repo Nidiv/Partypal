@@ -1,6 +1,6 @@
 const Service = require("../models/service");
 const Booking = require("../models/booking");
-const User = require("../models/user"); // ✅ Make sure this is correct path
+const User = require("../models/user");
 const express = require("express");
 const request = require("request");
 const {
@@ -22,7 +22,7 @@ async function initiate(req, res) {
       eventDate,
     } = req.body;
 
-    // ✅ Populate vendor
+    // Populate vendor
     const service = await Service.findById(serviceId).populate("vendorId");
     if (!service) {
       return res.status(404).json({ message: "Service not found" });
@@ -86,7 +86,7 @@ async function initiate(req, res) {
       paymentUrl: paymentResponse.payment_url,
     });
 
-    // ✅ Send email to user
+    //  Send email to user
     await sendBookingConfirmation(
       req.user?.email || "partypal.co@gmail.com",
       req.user?.username || "static",
@@ -98,8 +98,8 @@ async function initiate(req, res) {
       }
     );
 
-    // ✅ Send email to vendor
-    await sendVendorNotification(vendor.email, vendor.username, {
+    // Send email to vendor
+    await sendVendorNotification(vendor.email, {
       serviceTitle: service.title,
       eventDate,
       customerName: req.user?.username || "Anonymous User",
@@ -107,7 +107,7 @@ async function initiate(req, res) {
       totalAmount: amount,
     });
 
-    // ✅ Respond
+    // Respond
     res.status(200).json({
       ...paymentResponse,
       bookingId: savedBooking._id,

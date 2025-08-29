@@ -18,7 +18,7 @@ router.get("/all-services", async (req, res) => {
   }
 });
 
-// Protected routes (require vendor authentication)
+// Protected routes (requires vendor authentication)
 router.use(verifyVendor); // All routes after this will require auth
 
 router.get("/services", async (req, res) => {
@@ -98,7 +98,6 @@ router.post("/services", async (req, res) => {
   }
 });
 
-// Add this to your serviceRoutes.js (public route)
 router.get("/service-packages/:serviceId", async (req, res) => {
   try {
     const service = await Service.findById(req.params.serviceId).select(
