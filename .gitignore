@@ -11,9 +11,6 @@ node_modules
 #ignore upload images
 backend/uploads/
 
-#ignore assests images
-src/assets/img/
-
 # Log files
 npm-debug.log*
 yarn-debug.log*
