@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
   },
   documents: {
     type: [String],
-    default: undefined, // ✅ Prevents empty array in MongoDB
+    default: undefined, // Prevents empty array in MongoDB
     validate: {
       validator: function (v) {
         return this.role !== "vendor" || (v && v.length > 0 && v.length <= 2);

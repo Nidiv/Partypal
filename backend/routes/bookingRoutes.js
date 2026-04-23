@@ -43,7 +43,7 @@ router.get("/my-completed", async (req, res) => {
     })
       .populate({
         path: "service",
-        select: "-vendorId", // ✅ include everything EXCEPT vendorId
+        select: "-vendorId", //  include everything EXCEPT vendorId
       })
       .populate({
         path: "package",
@@ -58,7 +58,7 @@ router.get("/my-completed", async (req, res) => {
   }
 });
 
-// ✅ POST /booking/feedback/:bookingId
+// POST /booking/feedback/:bookingId
 router.post("/feedback/:bookingId", async (req, res) => {
   try {
     const { bookingId } = req.params;

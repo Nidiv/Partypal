@@ -3,7 +3,7 @@ const router = express.Router();
 const Message = require("../models/message");
 const { verifyVendor } = require("../middlewares/authMiddleware");
 
-// ✅ GET: Retrieve unique users who have chatted with the current vendor
+// GET: Retrieve unique users who have chatted with the current vendor
 router.get("/messages", verifyVendor, async (req, res) => {
   try {
     const vendorId = req.user.id;
@@ -37,7 +37,7 @@ router.get("/messages", verifyVendor, async (req, res) => {
   }
 });
 
-// ✅ GET: Retrieve full conversation between user and vendor
+// GET: Retrieve full conversation between user and vendor
 router.get("/conversation", async (req, res) => {
   const { userId, vendorId } = req.query;
 
@@ -63,7 +63,7 @@ router.get("/conversation", async (req, res) => {
   }
 });
 
-// ✅ POST: Send a new message
+// POST: Send a new message
 router.post("/send", async (req, res) => {
   const { senderId, receiverId, content } = req.body;
 

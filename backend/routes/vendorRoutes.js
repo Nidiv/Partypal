@@ -43,7 +43,7 @@ router.get("/vendor-bookings", async (req, res) => {
       user: b.user || {},
       service: b.service || {},
       package: b.package || {},
-      feedback: b.feedback || null, // ✅ include feedback object if present
+      feedback: b.feedback || null, // include feedback object if present
     }));
 
     res.status(200).json(response);

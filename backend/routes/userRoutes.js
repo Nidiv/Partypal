@@ -9,7 +9,7 @@ const { verifyAdmin } = require("../middlewares/authMiddleware"); // Middleware 
 
 const enteredPassword = "password123"; // Change if needed
 const storedHash =
-  "$2b$10$gMYtPJyjORMQ77WAOSGTjOp4BYk650oZbWAc84g1C3fx1MxYWF8wG"; // Replace with actual hash
+  "$2b$10$gMYtPJyjORMQ77WAOSGTjOp4BYk650oZbWAc84g1C3fx1MxYWF8wG"; // Replacing with actual hash
 
 bcrypt.compare(enteredPassword, storedHash, (err, result) => {
   if (err) console.error("Error:", err);
@@ -24,7 +24,7 @@ if (!process.env.JWT_SECRET) {
   throw new Error("Missing JWT_SECRET in environment variables");
 }
 
-// 🟢 Configure Multer Storage
+// Configure Multer Storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/"); // Ensure the "uploads" folder exists
@@ -36,7 +36,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// 🟢 Signup Route with File Uploads
+// Signup Route with File Uploads
 router.post("/signup", upload.array("documents", 2), async (req, res) => {
   console.log("Signup route hit", req.body);
   console.log("Uploaded Files:", req.files); // Debugging file uploads
@@ -78,7 +78,7 @@ router.post("/signup", upload.array("documents", 2), async (req, res) => {
   }
 });
 
-// 🔹 Login Route: Check Approval for Vendors
+// Login Route: Check Approval for Vendors
 router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body; // Changed from email to username
@@ -89,7 +89,7 @@ router.post("/login", async (req, res) => {
         .status(404)
         .json({ message: "Username not found. Try again." });
 
-    // 🚨 Block unapproved vendors
+    // Block unapproved vendors
     if (user.role === "vendor" && !user.isApproved) {
       return res
         .status(403)
@@ -142,7 +142,7 @@ router.get("/admin/pending-vendors", async (req, res) => {
   }
 });
 
-// 🔹 🆕 Admin Route: Approve a Vendor
+// Admin Route: Approve a Vendor
 router.put("/admin/approve-vendor/:id", async (req, res) => {
   try {
     const vendor = await User.findByIdAndUpdate(

@@ -26,7 +26,7 @@ const corsOptions = {
       "http://localhost:3001",
       "https://partypal-git-master-nidiv-s-projects.vercel.app",
       "https://partypal-f3q7s0bbv-nidiv-s-projects.vercel.app",
-      "https://partypal-nidiv-s-projects.vercel.app", // This might be your main domain
+      "https://partypal-yk.vercel.app", //running
       // Add any other Vercel preview URLs if needed
     ];
 

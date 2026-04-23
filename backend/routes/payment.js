@@ -8,6 +8,8 @@ const {
   sendVendorNotification,
 } = require("../utils/email");
 
+// User initiates a booking and gets redirected to Khalti for payment
+//Extract booking and payment details from the request body
 async function initiate(req, res) {
   try {
     const {
@@ -22,7 +24,7 @@ async function initiate(req, res) {
       eventDate,
     } = req.body;
 
-    // Populate vendor
+    // Search vendor by ID
     const service = await Service.findById(serviceId).populate("vendorId");
     if (!service) {
       return res.status(404).json({ message: "Service not found" });
@@ -32,6 +34,8 @@ async function initiate(req, res) {
 
     const amountInPaisa = amount * 100;
 
+    // Create a new booking document with status "pending" and save it to the database.
+    //Prepare Khalti request options and Send amountInPaisa, purchase_order_id
     const newBooking = new Booking({
       service: serviceId,
       package: packageId,
@@ -86,7 +90,7 @@ async function initiate(req, res) {
       paymentUrl: paymentResponse.payment_url,
     });
 
-    //  Send email to user
+    //  Send confirmation email to user
     await sendBookingConfirmation(
       req.user?.email || "partypal.co@gmail.com",
       req.user?.username || "static",
