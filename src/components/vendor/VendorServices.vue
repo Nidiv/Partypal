@@ -304,11 +304,14 @@ export default {
       this.loading = true;
       this.error = null;
       try {
-        const response = await axios.get("http://localhost:8081/api/services", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        });
+        const response = await axios.get(
+          "https://partypal-2.onrender.com/api/services",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
         this.services = response.data;
       } catch (err) {
         this.error = "Failed to load services. Please try again.";
@@ -334,7 +337,7 @@ export default {
       try {
         const newStatus = service.status === "active" ? "inactive" : "active";
         await axios.put(
-          `http://localhost:8081/api/services/${service._id}/status`,
+          `https://partypal-2.onrender.com/api/services/${service._id}/status`,
           { status: newStatus },
           {
             headers: {

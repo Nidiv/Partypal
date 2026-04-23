@@ -36,7 +36,9 @@
                 <img
                   v-for="(doc, index) in vendor.documents"
                   :key="index"
-                  :src="'http://localhost:8081/' + doc.replace(/\\/g, '/')"
+                  :src="
+                    'https://partypal-2.onrender.com/' + doc.replace(/\\/g, '/')
+                  "
                   class="w-20 h-20 object-cover rounded-md border"
                   alt="Vendor document"
                 />
@@ -79,7 +81,7 @@ export default {
     async fetchPendingVendors() {
       try {
         const response = await axios.get(
-          "http://localhost:8081/api/auth/admin/pending-vendors"
+          "https://partypal-2.onrender.com/api/auth/admin/pending-vendors"
         );
         this.vendors = response.data;
       } catch (error) {
@@ -91,7 +93,7 @@ export default {
     async approveVendor(id) {
       try {
         await axios.put(
-          `http://localhost:8081/api/auth/admin/approve-vendor/${id}`,
+          `https://partypal-2.onrender.com/api/auth/admin/approve-vendor/${id}`,
           {},
           {
             headers: {
@@ -107,7 +109,7 @@ export default {
     async deleteVendor(id) {
       try {
         await axios.delete(
-          `http://localhost:8081/api/auth/admin/delete-vendor/${id}`,
+          `https://partypal-2.onrender.com/api/auth/admin/delete-vendor/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("authToken")}`,

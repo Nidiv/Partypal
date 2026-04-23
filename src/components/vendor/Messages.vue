@@ -61,9 +61,12 @@ export default {
     async fetchMessagedUsers() {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await axios.get("http://localhost:8081/api/chat/messages", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(
+          "https://partypal-2.onrender.com/api/chat/messages",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         this.users = res.data.users;
       } catch (err) {
         console.error("Error fetching messages:", err);

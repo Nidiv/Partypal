@@ -753,7 +753,7 @@ export default {
     async login() {
       try {
         const response = await axios.post(
-          "http://localhost:8081/api/auth/login",
+          "https://partypal-2.onrender.com/api/auth/login",
           {
             username: this.username,
             password: this.password,
@@ -829,7 +829,7 @@ export default {
         }
 
         const response = await axios.post(
-          "http://localhost:8081/api/auth/signup",
+          "https://partypal-2.onrender.com/api/auth/signup",
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -857,7 +857,7 @@ export default {
           // Auto-login for regular users
           try {
             const loginResponse = await axios.post(
-              "http://localhost:8081/api/auth/login",
+              "https://partypal-2.onrender.com/api/auth/login",
               {
                 username: this.username,
                 password: this.password,

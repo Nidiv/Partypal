@@ -903,7 +903,7 @@ export default {
         this.loading = true;
         this.error = null;
         const response = await axios.get(
-          "http://localhost:8081/api/all-services"
+          "https://partypal-2.onrender.com/api/all-services"
         );
         this.services = response.data;
       } catch (error) {
@@ -1070,7 +1070,7 @@ export default {
         if (!userId) {
           try {
             const userResponse = await axios.get(
-              "http://localhost:8081/api/auth/me",
+              "https://partypal-2.onrender.com/api/auth/me",
               {
                 headers: {
                   Authorization: `Bearer ${authToken}`,
@@ -1106,7 +1106,7 @@ export default {
 
         // Rest of your code remains the same
         const baseURL = window.location.origin.includes("localhost")
-          ? "http://localhost:8081"
+          ? "https://partypal-2.onrender.com"
           : "";
 
         const response = await axios.post(

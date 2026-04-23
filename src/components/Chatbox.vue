@@ -117,7 +117,7 @@ export default {
     async fetchMessages() {
       try {
         const res = await axios.get(
-          "http://localhost:8081/api/chat/conversation",
+          "https://partypal-2.onrender.com/api/chat/conversation",
           {
             params: {
               userId: this.userId,
@@ -140,7 +140,7 @@ export default {
     async sendMessage() {
       if (!this.newMessage.trim()) return;
       try {
-        await axios.post("http://localhost:8081/api/chat/send", {
+        await axios.post("https://partypal-2.onrender.com/api/chat/send", {
           senderId: this.senderId,
           receiverId: this.receiverId,
           content: this.newMessage,

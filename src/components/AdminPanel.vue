@@ -28,7 +28,9 @@
                 <img
                   v-for="(doc, index) in vendor.documents"
                   :key="index"
-                  :src="'http://localhost:8081/' + doc.replace(/\\/g, '/')"
+                  :src="
+                    'https://partypal-2.onrender.com/' + doc.replace(/\\/g, '/')
+                  "
                   class="w-20 h-20 object-cover rounded-md border"
                   alt="Vendor document"
                 />
@@ -70,7 +72,7 @@ export default {
         }
 
         const response = await axios.put(
-          `http://localhost:8081/api/auth/admin/approve-vendor/${vendorId}`,
+          `https://partypal-2.onrender.com/api/auth/admin/approve-vendor/${vendorId}`,
           {},
           {
             headers: {

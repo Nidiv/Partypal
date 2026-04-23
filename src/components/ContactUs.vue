@@ -102,7 +102,7 @@ export default {
     async submitForm() {
       try {
         const response = await axios.post(
-          "http://localhost:8081/api/contact/submit",
+          "https://partypal-2.onrender.com/api/contact/submit",
           this.form
         );
         alert("Your message has been sent!");

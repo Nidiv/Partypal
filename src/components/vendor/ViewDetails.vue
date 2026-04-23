@@ -90,7 +90,7 @@ export default {
 
       try {
         const response = await axios.get(
-          `http://localhost:8081/api/services/${serviceId}`
+          `https://partypal-2.onrender.com/api/services/${serviceId}`
         );
         this.service = response.data;
       } catch (err) {

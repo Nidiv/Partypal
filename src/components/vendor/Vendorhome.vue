@@ -834,7 +834,7 @@ export default {
         const authToken = localStorage.getItem("authToken"); // Get token if required
 
         const response = await axios.post(
-          "http://localhost:8081/api/services",
+          "https://partypal-2.onrender.com/api/services",
           this.service,
           {
             headers: {

@@ -250,7 +250,7 @@ export default {
     async fetchBookings() {
       try {
         const res = await axios.get(
-          "http://localhost:8081/booking/my-completed",
+          "https://partypal-2.onrender.com/booking/my-completed",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("authToken")}`,
@@ -287,7 +287,7 @@ export default {
         if (!userId) {
           try {
             const userResponse = await axios.get(
-              "http://localhost:8081/api/auth/me",
+              "https://partypal-2.onrender.com/api/auth/me",
               {
                 headers: {
                   Authorization: `Bearer ${authToken}`,
@@ -311,7 +311,7 @@ export default {
         };
 
         const baseURL = window.location.origin.includes("localhost")
-          ? "http://localhost:8081"
+          ? "https://partypal-2.onrender.com"
           : "";
 
         const response = await axios.post(
@@ -349,7 +349,7 @@ export default {
           return;
         }
         await axios.post(
-          `http://localhost:8081/booking/feedback/${booking._id}`,
+          `https://partypal-2.onrender.com/booking/feedback/${booking._id}`,
           { rating, text },
           {
             headers: {

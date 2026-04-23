@@ -201,7 +201,9 @@ export default {
   methods: {
     async fetchServices() {
       try {
-        const res = await axios.get("http://localhost:8081/api/all-services");
+        const res = await axios.get(
+          "https://partypal-2.onrender.com/api/all-services"
+        );
 
         // Shuffle the array
         const shuffled = res.data.sort(() => 0.5 - Math.random());

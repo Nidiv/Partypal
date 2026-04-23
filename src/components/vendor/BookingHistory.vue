@@ -160,7 +160,7 @@ export default {
       try {
         const token = localStorage.getItem("authToken");
         const response = await axios.get(
-          "http://localhost:8081/vendor/vendor-bookings",
+          "https://partypal-2.onrender.com/vendor/vendor-bookings",
           {
             headers: {
               Authorization: `Bearer ${token}`,

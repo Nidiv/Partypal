@@ -85,7 +85,7 @@ export default {
     if (this.status === "Completed") {
       try {
         await axios.post(
-          "http://localhost:8081/booking/confirm",
+          "https://partypal-2.onrender.com/booking/confirm",
           {
             bookingId: localStorage.getItem("bookingId"),
           },
